@@ -8,7 +8,7 @@ Sigue estos pasos para clonar e iniciar el proyecto:
 
 1. Clona el repositorio:
     ```bash
-    git clone https://github.com/tu-usuario/PvZ-Dodo-Version.git
+    git clone https://github.com/emilianofh01/PvZ-Dodo-Version.git
     ```
 
 2. Navega al directorio del proyecto:
@@ -19,15 +19,11 @@ Sigue estos pasos para clonar e iniciar el proyecto:
 3. Instala las dependencias necesarias:
     ```bash
     npm install
-    # o
-    yarn install
     ```
 
 4. Inicia el juego:
     ```bash
-    npm start
-    # o
-    yarn start
+    npm run dev
     ```
 
 ## Uso
