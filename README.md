@@ -1,6 +1,6 @@
 # PvZ Dodo's Version
 
-Este proyecto es una réplica del juego **Plants vs. Zombies**, creado para la materia **Graficación y multimedia** en **Universidad Autónoma de Baja California Sur**.
+Este proyecto es una réplica del juego **Plants vs. Zombies**, creado para la materia **Graficación y multimedia** en la **Universidad Autónoma de Baja California Sur**.
 
 ## Instalación
 
