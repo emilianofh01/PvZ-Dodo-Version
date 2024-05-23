@@ -1,7 +1,7 @@
 export interface IAssetKey <AssetType> {
     readonly key: string;
     readonly type: AssetType;
-    readonly url: URL;
+    readonly url: string;
 }
 
 export interface AssetType<ReturnType> {
@@ -44,12 +44,12 @@ export const ASSET_TYPES: AssetTypeMap = {
 
 export class AssetKey<T extends typeof ASSET_TYPES[keyof AssetTypeMap]> implements IAssetKey<T> {
     readonly type: T;
-    readonly url: URL;
+    readonly url: string;
     readonly key: string;
 
     constructor(asset_type: T, url: string) {
         this.type = asset_type;
-        this.url = new URL(url);
+        this.url = url;
         this.key = this.type.key + "_" + url;
     }
 }
