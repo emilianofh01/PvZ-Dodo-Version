@@ -1,7 +1,10 @@
-import Renderer from "../../rendering/Renderer";
+import Renderer, { BackdropFill } from "../rendering/Renderer";
 
 export default interface IScene {
-    preload(): void;
+    readonly fill: BackdropFill;
+
+    preload(): Promise<void>;
     update(delta: number): void;
     render(renderer: Renderer): void;
+    dispose(): void;
 }
