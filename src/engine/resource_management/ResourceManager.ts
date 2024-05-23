@@ -3,6 +3,8 @@ import IResourceLoader, { AssetType, IAssetKey } from "./IResourceLoader";
 export default class ResourceManagement implements IResourceLoader {
     private assets_loaded : Map<string, Promise<unknown> | unknown> = new Map();
 
+    private constructor() { }
+
     private static _instance: ResourceManagement | null;
 
     static get instance(){
