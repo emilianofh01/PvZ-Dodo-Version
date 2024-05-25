@@ -5,7 +5,6 @@ import ResourceManagement from "../resource_management/ResourceManager";
 import { ASSET_TYPES, AssetKey } from "../resource_management/IResourceLoader";
 import Entity from "../../entities/Entity";
 
-
 export class Scene implements IScene {
     dodo: Dodo;
     entities: Entity[];
