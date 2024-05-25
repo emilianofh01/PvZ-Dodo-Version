@@ -25,7 +25,7 @@ export default class Dodo {
     }
 
     render(){
-        this._currentScene && this.renderer.renderLevel(this._currentScene);
+        this._currentScene && this.renderer.renderScene(this._currentScene);
     }
 
     loop(timer: DOMHighResTimeStamp){

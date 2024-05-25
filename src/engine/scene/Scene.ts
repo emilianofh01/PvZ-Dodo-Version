@@ -30,6 +30,10 @@ export class Scene implements IScene {
         this.entities.push(entity);
     }
 
+    removeEntity(entity: Entity){
+        this.entities = this.entities.filter(e => e != entity);
+    }
+
     update(delta: number): void {
         this.entities.forEach(e => e.tick(delta))
     }
