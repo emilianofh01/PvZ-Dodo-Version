@@ -2,7 +2,7 @@ import Dodo from "./engine/Dodo";
 import Renderer from "./engine/rendering/Renderer";
 import { Scene } from "./engine/scene/Scene";
 import Entity from "./entities/Entity";
-import {KEYBOARD, KeyboardEventData} from "./engine/input/keyboard.ts";
+import {MOUSE_MOVE, MouseMoveEventData} from "./engine/input/mouse_movement.ts";
 
 const dodo = new Dodo(document.getElementsByTagName("canvas")[0]);
 
@@ -18,21 +18,19 @@ class CursorEntity implements Entity{
 
     constructor(scene: Scene){
         this.scene = scene;
-        this.scene.dodo.listener_manager.addEventListener(KEYBOARD, this.onType);
-        document.addEventListener("mousemove", this.listener);
+        this.scene.dodo.listener_manager.addEventListener(MOUSE_MOVE, this.onMouseMove);
     }
 
-    onType(data: KeyboardEventData){
-        console.log(data);
+    onMouseMove = (data: MouseMoveEventData) =>{
+        this.mouse_pos = data.position;
     }
 
     dispose(): void {
-        this.scene.dodo.listener_manager.removeEventListener(KEYBOARD, this.onType);
-        document.addEventListener("mousemove", this.listener);
+        this.scene.dodo.listener_manager.removeEventListener(MOUSE_MOVE, this.onMouseMove);
     }
 
     tick(_: number): void {
-        this.pos = this.mouse_pos;
+        this.pos = [this.mouse_pos[0] - 4, this.mouse_pos[1] - 4];
     }
 
     draw(renderer: Renderer): void {

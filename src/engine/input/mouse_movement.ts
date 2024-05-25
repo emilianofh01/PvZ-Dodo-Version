@@ -1,7 +1,28 @@
 import {BroadcasterKey, InputBroadcaster} from "./broadcasting.ts";
 
-export class MouseMoveEventData {
+type pos = [number, number];
 
+export class MouseMoveEventData {
+    public readonly position: pos;
+    public readonly screenPosition: pos;
+    public readonly documentPosition: pos;
+    public readonly delta: pos;
+
+    constructor(position: pos, screenPosition: pos, documentPosition: pos, delta: pos) {
+        this.position = position;
+        this.screenPosition = screenPosition;
+        this.documentPosition = documentPosition;
+        this.delta = delta;
+    }
+
+    static of(element: HTMLElement, event: MouseEvent){
+        return new MouseMoveEventData(
+            [event.pageX - element.offsetLeft, event.pageY - element.offsetTop],
+            [event.screenX, event.screenY],
+            [event.pageX, event.pageY],
+            [event.movementX, event.movementY]
+        );
+    }
 }
 
 export const MOUSE_MOVE: BroadcasterKey<MouseMoveEventData> = BroadcasterKey.make(MouseMoveEventData);
@@ -11,15 +32,19 @@ export class MouseMovementBroadcaster implements InputBroadcaster<MouseMoveEvent
     public readonly key: BroadcasterKey<MouseMoveEventData> = MOUSE_MOVE;
     public callbacks: Set<(event: MouseMoveEventData) => void | boolean> = new Set();
     
+    public element: HTMLCanvasElement | null = null;
+
     mousemove = (event: MouseEvent) => {
-        this.dispatchEvent(new MouseMoveEventData())
+        this.element && this.dispatchEvent(MouseMoveEventData.of(this.element, event))
     }
 
-    attach(_: HTMLCanvasElement): void {
+    attach(element: HTMLCanvasElement): void {
+        this.element = element
         document.addEventListener('mousemove', this.mousemove);
     }
 
-    detach(_: HTMLCanvasElement): void {
+    detach(element: HTMLCanvasElement): void {
+        this.element == element && (this.element = null);
         document.removeEventListener('mousemove', this.mousemove);
     }
 
