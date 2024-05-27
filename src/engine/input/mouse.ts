@@ -47,7 +47,6 @@ export class MouseEventData {
     }
 
     static of(element: HTMLElement, type: MouseEventType, event: MouseEvent, previous_pos?: pos){
-        console.log(previous_pos)
         return new MouseEventData(
             type,
             [event.pageX - element.offsetLeft, event.pageY - element.offsetTop],
