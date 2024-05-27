@@ -1,10 +1,12 @@
 import { ListenerManager } from "./input/listener";
 import Renderer from "./rendering/Renderer";
 import IScene from "./scene/IScene";
+import {BasicGuiController, IGUIController} from "../gui/controller.ts";
 
 export default class Dodo {
     public readonly canvas: HTMLCanvasElement;
     public readonly renderer: Renderer;
+    public readonly guiController: IGUIController;
     public readonly listener_manager: ListenerManager;
     private _currentScene: IScene | null = null;
     private last_update: DOMHighResTimeStamp | null = null;
@@ -13,6 +15,7 @@ export default class Dodo {
         this.canvas = canvas;
         this.renderer = new Renderer(canvas);
         this.listener_manager = new ListenerManager(this);
+        this.guiController = new BasicGuiController(this);
     }
 
     transitionTo(provider: (dodo: Dodo) => IScene){
@@ -22,10 +25,12 @@ export default class Dodo {
 
     update(delta: number){
         this._currentScene?.update(delta);
+        this.guiController.tick(delta);
     }
 
     render(){
         this._currentScene && this.renderer.renderScene(this._currentScene);
+        this.renderer.renderGui(this.guiController);
     }
 
     loop(timer: DOMHighResTimeStamp){
