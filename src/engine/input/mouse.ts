@@ -1,4 +1,5 @@
 import {BroadcasterKey, InputBroadcaster} from "./broadcasting.ts";
+import {point2Circle} from "../core/collision.ts";
 
 type pos = [number, number];
 
@@ -18,12 +19,14 @@ export function convertNaturalToMouseButtonBinaryNotation(button: number){
 
 export enum MouseEventType {
     MouseDown,
-    MouseUp
+    MouseUp,
+    MouseClick
 }
 
 export class MouseEventData {
     public readonly type: MouseEventType;
     public readonly position: pos;
+    public readonly previous_pos: pos;
     public readonly screenPosition: pos;
     public readonly documentPosition: pos;
     public readonly altKey: boolean;
@@ -31,7 +34,7 @@ export class MouseEventData {
     public readonly button: MouseButton;
     public readonly buttons_pressed: number;
 
-    constructor(type: MouseEventType, position: pos, screenPosition: pos, documentPosition: pos, altKey: boolean, ctrlKey: boolean, button: MouseButton, buttons_pressed: number) {
+    constructor(type: MouseEventType, position: pos, screenPosition: pos, documentPosition: pos, altKey: boolean, ctrlKey: boolean, button: MouseButton, buttons_pressed: number, previous_pos?: pos) {
         this.position = position;
         this.screenPosition = screenPosition;
         this.documentPosition = documentPosition;
@@ -40,9 +43,11 @@ export class MouseEventData {
         this.button = button;
         this.buttons_pressed = buttons_pressed;
         this.type = type;
+        this.previous_pos = previous_pos ?? [...this.position];
     }
 
-    static of(element: HTMLElement, type: MouseEventType, event: MouseEvent){
+    static of(element: HTMLElement, type: MouseEventType, event: MouseEvent, previous_pos?: pos){
+        console.log(previous_pos)
         return new MouseEventData(
             type,
             [event.pageX - element.offsetLeft, event.pageY - element.offsetTop],
@@ -51,7 +56,8 @@ export class MouseEventData {
             event.altKey,
             event.ctrlKey,
             convertNaturalToMouseButtonBinaryNotation(event.button),
-            event.buttons
+            event.buttons,
+            previous_pos
         );
     }
 }
@@ -64,25 +70,38 @@ export class MouseBroadcaster implements InputBroadcaster<MouseEventData>{
     public callbacks: Set<(event: MouseEventData) => void | boolean> = new Set();
     
     public element: HTMLCanvasElement | null = null;
+    private mouse_start_pos?: [number, number];
 
     mousedown = (event: MouseEvent) => {
-        this.element && this.dispatchEvent(MouseEventData.of(this.element, MouseEventType.MouseDown, event))
+        if(!this.element) return;
+        const event_data = MouseEventData.of(this.element, MouseEventType.MouseDown, event);
+        this.mouse_start_pos = event_data.position;
+        this.dispatchEvent(event_data);
     }
     
     mouseup = (event: MouseEvent) => {
         this.element && this.dispatchEvent(MouseEventData.of(this.element, MouseEventType.MouseUp, event))
+    }
+
+    click = (event: MouseEvent) => {
+        if(!this.element || !this.mouse_start_pos) return;
+        const event_data = MouseEventData.of(this.element, MouseEventType.MouseClick, event, this.mouse_start_pos);
+        if(point2Circle(this.mouse_start_pos, event_data.position, 10))
+            this.dispatchEvent(event_data)
     }
     
     attach(element: HTMLCanvasElement): void {
         this.element = element
         document.addEventListener('mousedown', this.mousedown);
         document.addEventListener('mouseup', this.mouseup);
+        document.addEventListener('click', this.click);
     }
 
     detach(element: HTMLCanvasElement): void {
         this.element == element && (this.element = null);
         document.removeEventListener('mousedown', this.mousedown);
         document.removeEventListener('mouseup', this.mouseup);
+        document.removeEventListener('click', this.click);
     }
 
     addEventListener(callback: (event: MouseEventData) => void | boolean): void {
