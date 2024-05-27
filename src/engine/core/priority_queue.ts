@@ -55,8 +55,9 @@ export class PriorityQueue<T> {
         if(index > PriorityQueue.top){
             this.swap(index, PriorityQueue.top);
         }
-        this.heap.pop();
+        const element = this.heap.pop();
         this.siftUp(index);
+        return element;
     }
     
     replace(value: T) {
