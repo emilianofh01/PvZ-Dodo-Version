@@ -38,6 +38,10 @@ export class SpriteSheet {
         })
     }
     
+    getGroup(group_name: string){
+        return notNullOrUndefined(this.groups.get(group_name));
+    }
+
     drawImage(context: CanvasRenderingContext2D, group_name: string, index: number, dest_x: number, dest_y: number, dest_w?: number, dest_h?: number){
         if(this.image == null) return;
         if(!this.groups.has(group_name)) return;
