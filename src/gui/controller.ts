@@ -3,6 +3,7 @@ import {PriorityQueue} from "../engine/core/priority_queue.ts";
 import Renderer from "../engine/rendering/Renderer.ts";
 import {MOUSE, MouseEventData, MouseEventType} from "../engine/input/mouse.ts";
 import {IDisposable} from "../engine/core/types.ts";
+import {MOUSE_MOVE, MouseMoveEventData} from "../engine/input/mouse_movement.ts";
 
 export interface IGUIController extends IDisposable {
     render(renderer: Renderer): void;
@@ -24,6 +25,7 @@ export interface IGUIOverlay extends IDisposable {
 export interface IGUIMenu extends IDisposable {
     render(renderer: Renderer): void;
     tick(delta: number): void;
+    mouseMove?(event: MouseMoveEventData): void;
     mouseDown?(event: MouseEventData): void;
     mouseUp?(event: MouseEventData): void;
     click?(event: MouseEventData): void;
@@ -39,6 +41,11 @@ export class BasicGuiController implements IGUIController {
         this.overlays = new PriorityQueue<IGUIOverlay>((a, b) => a.zIndex > b.zIndex);
         this.currentMenu = menu ?? null;
         this.dodo.listener_manager.addEventListener(MOUSE, this.mouseEvent);
+        this.dodo.listener_manager.addEventListener(MOUSE_MOVE, this.mouseMove);
+    }
+
+    mouseMove = (moveEvent: MouseMoveEventData) => {
+        this.currentMenu?.mouseMove && this.currentMenu?.mouseMove(moveEvent);
     }
 
     mouseEvent = (mouseEvent: MouseEventData) => {
@@ -60,6 +67,8 @@ export class BasicGuiController implements IGUIController {
     dispose(){
         this.overlays.forEach(e => e.dispose());
         this.currentMenu?.dispose();
+        this.dodo.listener_manager.removeEventListener(MOUSE, this.mouseEvent);
+        this.dodo.listener_manager.removeEventListener(MOUSE_MOVE, this.mouseMove)
     }
 
     render(renderer: Renderer): void {
