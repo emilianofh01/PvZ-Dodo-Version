@@ -5,6 +5,7 @@ import { Button } from "./gui/components/buttons.ts";
 import {SpriteSheet} from "./engine/sprites/spritesheet.ts";
 import ResourceManagement from "./engine/resource_management/ResourceManager.ts";
 import {ASSET_TYPES, AssetKey} from "./engine/resource_management/IResourceLoader.ts";
+import {SunEntity} from "./entities/SunEntity.ts";
 
 const dodo = new Dodo(document.getElementsByTagName("canvas")[0]);
 
@@ -69,7 +70,12 @@ menu.addComponent(new Button(dodo, {
         sheet.drawImage(renderer.context, "button", 8, pos[0] + size[0] - group.cell_size[0], pos[1] + size[1] - group.cell_size[1])
     }
 }))
-dodo.guiController.setMenu(menu);
+
+dodo.currentScene?.addEntity((scene) => new SunEntity({
+    position: [100, 100],
+    degreesPerSecond: 90,
+    size: [200, 200],
+}, scene.dodo))
 
 const loop_fn = (a: number) => {
     dodo.loop(a);
