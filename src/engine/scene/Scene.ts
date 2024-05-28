@@ -9,7 +9,7 @@ export class Scene implements IScene {
     dodo: Dodo;
     entities: Entity[];
 
-    public readonly fill: BackdropFill = "#ddd";
+    public readonly fill: BackdropFill = "#070";
     
     constructor(dodo: Dodo){
         this.dodo = dodo;
