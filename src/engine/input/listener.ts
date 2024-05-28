@@ -2,11 +2,13 @@ import Dodo from "../Dodo";
 import {BroadcasterKey, InputBroadcaster} from "./broadcasting.ts";
 import { KeyboardBroadcaster } from "./keyboard";
 import {MouseMovementBroadcaster} from "./mouse_movement.ts";
+import {MouseBroadcaster} from "./mouse.ts";
 
 export class ListenerManager {
     public static readonly DEFAULT_BROADCASTERS: (() => InputBroadcaster<unknown>)[] = [
         () => new KeyboardBroadcaster(),
         () => new MouseMovementBroadcaster(),
+        () => new MouseBroadcaster()
     ]
 
     private readonly broadcasters: Map<Symbol, InputBroadcaster<unknown>> = new Map();

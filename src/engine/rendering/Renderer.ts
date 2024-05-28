@@ -1,5 +1,6 @@
 import IScene from "../scene/IScene";
 import { notNull } from "../../utils/Objects";
+import { IGUIController } from "../../gui/controller";
 
 declare global {
     interface CanvasRenderingContext2D extends CanvasRenderingContext2DEx {}
@@ -32,8 +33,12 @@ export default class Renderer {
         this.context = notNull(this.canvas.getContext('2d'), "Couldn't not make context");
     }
 
-    renderLevel(level: IScene) {
+    renderScene(level: IScene) {
         this.context.clear(level.fill);
         level.render(this);
+    }
+
+    renderGui(controller: IGUIController) {
+        controller.render(this);
     }
 }

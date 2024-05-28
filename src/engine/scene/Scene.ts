@@ -5,7 +5,6 @@ import ResourceManagement from "../resource_management/ResourceManager";
 import { ASSET_TYPES, AssetKey } from "../resource_management/IResourceLoader";
 import Entity from "../../entities/Entity";
 
-
 export class Scene implements IScene {
     dodo: Dodo;
     entities: Entity[];
@@ -28,6 +27,10 @@ export class Scene implements IScene {
     addEntity(provider: (scene: Scene) => Entity) {
         const entity = provider(this)
         this.entities.push(entity);
+    }
+
+    removeEntity(entity: Entity){
+        this.entities = this.entities.filter(e => e != entity);
     }
 
     update(delta: number): void {
