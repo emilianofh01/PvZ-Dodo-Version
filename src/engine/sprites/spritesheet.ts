@@ -9,6 +9,7 @@ interface SpriteSheetGroup {
     grid_size: size
     cell_size: size
     padding: size
+    frames?: number
 }
 
 interface SpriteSheetData {
