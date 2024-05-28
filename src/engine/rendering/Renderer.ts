@@ -12,6 +12,32 @@ export type rect = [number,number,number,number];
 export interface CanvasRenderingContext2DEx {
     clear(color?: BackdropFill): void;
     renderRect(fill: BackdropFill, ...rect: rect): void;
+    drawImageRotated(image: CanvasImageSource, rotation: number, pivot: [number, number], sx: number, sy: number, sw: number, sh: number, dx?: number, dy?: number, dw?: number, dh?: number): void;
+}
+
+export const PIVOTS = Object.freeze({
+    TOP_CENTER: [ .5,  0] as [number, number],
+    MID_CENTER: [ .5, .5] as [number, number],
+    BOT_CENTER: [ .5,  1] as [number, number],
+    TOP_LEFT: [ 0,  0] as [number, number],
+    MID_LEFT: [ 0, .5] as [number, number],
+    BOT_LEFT: [ 0,  1] as [number, number],
+    TOP_RIGHT: [ 1,  0] as [number, number],
+    MID_RIGHT: [ 1, .5] as [number, number],
+    BOT_RIGHT: [ 1,  1] as [number, number],
+})
+
+CanvasRenderingContext2D.prototype.drawImageRotated = function (image: CanvasImageSource, rotation: number, pivot: [number, number], sx: number, sy: number, sw: number, sh: number, dx?: number, dy?: number, dw?: number, dh?: number) {
+    const x = dx != undefined ? dx : sx;
+    const y = dy != undefined ? dy : sy;
+    this.save();
+    this.translate(x, y);
+    this.rotate(rotation);
+    if(dx !== undefined && dy !== undefined && dw !== undefined && dh !== undefined)
+        this.drawImage(image, sx, sy, sw, sh, -dw * pivot[0], -dh * pivot[1], dw, dh)
+    else
+        this.drawImage(image, -sw * pivot[0], -sh * pivot[1], sw, sh)
+    this.restore();
 }
 
 CanvasRenderingContext2D.prototype.clear = function (color) {
