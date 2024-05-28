@@ -15,6 +15,10 @@ export default class Dodo {
         this.listener_manager = new ListenerManager(this);
     }
 
+    get currentScene(){
+        return this._currentScene;
+    }
+
     transitionTo(provider: (dodo: Dodo) => IScene){
         this._currentScene?.dispose();
         this._currentScene = provider(this);
