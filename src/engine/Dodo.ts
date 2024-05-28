@@ -42,6 +42,7 @@ export default class Dodo {
             this.last_update = timer;
         }
         const delta = timer - this.last_update;
+        this.last_update = timer;
         this.update(delta);
         this.render();
     }
