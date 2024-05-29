@@ -8,7 +8,7 @@ export default class FPSOverlay implements IGUIOverlay {
 
     render(renderer: Renderer): void {
         renderer.context.fillStyle = "#000";
-        renderer.context.font = "16px pixel"
+        renderer.context.font = "16px sans-serif";
         renderer.context.textRendering = "optimizeLegibility";
         renderer.context.fontKerning = "none"
         renderer.context.fillText("FPS:" + [...this.fps].sort()[Math.floor(this.fps.length / 2)], 0, 16);
