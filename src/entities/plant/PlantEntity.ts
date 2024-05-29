@@ -8,6 +8,7 @@ export interface PlantProperties {
 
 export abstract class AbstractPlantEntity<P extends PlantProperties> implements Entity {
     abstract get boundingBox(): [number, number, number, number];
+    abstract readonly zIndex: number;
     
     protected dodo: Dodo;
     properties: P;
@@ -16,6 +17,7 @@ export abstract class AbstractPlantEntity<P extends PlantProperties> implements 
     constructor(props: P, dodo: Dodo) {
         this.properties = props;
         this.dodo = dodo;
+        this.cooldownElapsed = this.properties.cooldown;
     }
     
     tick(delta: number): void {
