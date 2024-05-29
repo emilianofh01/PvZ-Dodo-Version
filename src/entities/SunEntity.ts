@@ -41,7 +41,7 @@ export class SunEntity<T extends SunProperties = SunProperties> implements Entit
         if(this.rotation > 360000){
             this.rotation = this.rotation % 360000;
         }
-        this.scale = 1 + (Math.cos(this.rotation / 1000 * Math.PI / 180) * .2) / 2;
+        this.scale = 1 + (Math.cos((this.rotation / 1000 * Math.PI / 180) * 7) * .2) / 2;
     }
     
     draw(renderer: Renderer) {
