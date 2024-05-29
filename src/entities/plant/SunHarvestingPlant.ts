@@ -8,7 +8,7 @@ export interface SunHarvestingPlantProperties extends PlantProperties {
     sunSpawningPoint: [number, number];
 }
 
-export abstract  class SunHarvestingPlant<T extends SunHarvestingPlantProperties> extends AbstractPlantEntity<T> {
+export abstract  class SunHarvestingPlant<T extends SunHarvestingPlantProperties = SunHarvestingPlantProperties> extends AbstractPlantEntity<T> {
     
     readonly sunProvider: (position: [number, number], sunAmount: number, scene: Scene) => Entity;
     
