@@ -1,7 +1,7 @@
 import { ListenerManager } from "./input/listener";
 import Renderer from "./rendering/Renderer";
 import IScene from "./scene/IScene";
-import {BasicGuiController, IGUIController} from "../gui/controller.ts";
+import {BasicGuiController, IGUIController} from "./gui/controller.ts";
 
 export default class Dodo {
     public readonly canvas: HTMLCanvasElement;

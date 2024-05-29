@@ -1,9 +1,9 @@
-import Dodo from "../engine/Dodo.ts";
-import {PriorityQueue} from "../engine/core/priority_queue.ts";
-import Renderer from "../engine/rendering/Renderer.ts";
-import {MOUSE, MouseEventData, MouseEventType} from "../engine/input/mouse.ts";
-import {IDisposable} from "../engine/core/types.ts";
-import {MOUSE_MOVE, MouseMoveEventData} from "../engine/input/mouse_movement.ts";
+import Dodo from "../Dodo.ts";
+import {PriorityQueue} from "../core/priority_queue.ts";
+import Renderer from "../rendering/Renderer.ts";
+import {MOUSE, MouseEventData, MouseEventType} from "../input/mouse.ts";
+import {IDisposable} from "../core/types.ts";
+import {MOUSE_MOVE, MouseMoveEventData} from "../input/mouse_movement.ts";
 
 export interface IGUIController extends IDisposable {
     render(renderer: Renderer): void;

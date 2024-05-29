@@ -1,9 +1,9 @@
-import {IDisposable} from "../engine/core/types.ts";
-import Renderer from "../engine/rendering/Renderer.ts";
-import {MouseEventData} from "../engine/input/mouse.ts";
+import {IDisposable} from "../core/types.ts";
+import Renderer from "../rendering/Renderer.ts";
+import {MouseEventData} from "../input/mouse.ts";
 import {IGUIMenu} from "./controller.ts";
-import {PriorityQueue} from "../engine/core/priority_queue.ts";
-import {MouseMoveEventData} from "../engine/input/mouse_movement.ts";
+import {PriorityQueue} from "../core/priority_queue.ts";
+import {MouseMoveEventData} from "../input/mouse_movement.ts";
 
 export interface GUIElement extends IDisposable{
     get zIndex(): number;
