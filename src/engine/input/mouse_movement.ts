@@ -15,9 +15,9 @@ export class MouseMoveEventData {
         this.delta = delta;
     }
 
-    static of(element: HTMLElement, event: MouseEvent){
+    static of(element: HTMLCanvasElement, event: MouseEvent){
         return new MouseMoveEventData(
-            [event.pageX - element.offsetLeft, event.pageY - element.offsetTop],
+            [(event.pageX - element.offsetLeft) * element.width / element.offsetWidth , (event.pageY - element.offsetTop) * element.height / element.offsetHeight ],
             [event.screenX, event.screenY],
             [event.pageX, event.pageY],
             [event.movementX, event.movementY]

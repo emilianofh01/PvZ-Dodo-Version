@@ -46,10 +46,10 @@ export class MouseEventData {
         this.previous_pos = previous_pos ?? [...this.position];
     }
 
-    static of(element: HTMLElement, type: MouseEventType, event: MouseEvent, previous_pos?: pos){
+    static of(element: HTMLCanvasElement, type: MouseEventType, event: MouseEvent, previous_pos?: pos){
         return new MouseEventData(
             type,
-            [event.pageX - element.offsetLeft, event.pageY - element.offsetTop],
+            [(event.pageX - element.offsetLeft) * element.width / element.offsetWidth, (event.pageY - element.offsetTop) * element.height / element.offsetHeight],
             [event.screenX, event.screenY],
             [event.pageX, event.pageY],
             event.altKey,
