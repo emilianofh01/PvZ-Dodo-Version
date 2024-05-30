@@ -26,7 +26,7 @@ export abstract class Animation<T extends AnimationProps = AnimationProps> {
     }
     
     abstract nextFrame(): void;
-    abstract render(renderer: Renderer, rect: [number,number,number,number]): void;
+    abstract render(renderer: Renderer, pivot: [number, number], dest_x: number, dest_y: number, dest_w?: number, dest_h?: number): void;
 }
 
 export interface SpriteSheetAnimationProps extends AnimationProps {
@@ -52,7 +52,11 @@ export class SpriteSheetAnimation extends Animation<SpriteSheetAnimationProps> {
         this.currentFrame %= this.props.totalFrames;
     }
     
-    render(renderer: Renderer, rect: [number, number, number, number]) {
-        this.props.spriteSheet.drawImage(renderer.context, this.props.groupName, this.currentFrame, ...rect);
+    render(renderer: Renderer, pivot: [number, number], dest_x: number, dest_y: number, dest_w?: number, dest_h?: number) {
+        if(pivot[0] == 0 && pivot[1] == 0){
+            this.props.spriteSheet.drawImage(renderer.context, this.props.groupName, this.currentFrame, dest_x, dest_y, dest_w, dest_h);
+            return;
+        }
+        this.props.spriteSheet.drawImagePivoted(renderer.context, this.props.groupName, this.currentFrame, pivot, dest_x, dest_y, dest_w, dest_h);
     }
 }

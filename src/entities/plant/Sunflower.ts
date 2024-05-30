@@ -1,5 +1,5 @@
 import Dodo from "../../engine/Dodo";
-import Renderer from "../../engine/rendering/Renderer";
+import Renderer, { PIVOTS } from "../../engine/rendering/Renderer";
 import { ASSET_TYPES, AssetKey } from "../../engine/resource_management/IResourceLoader";
 import ResourceManagement from "../../engine/resource_management/ResourceManager";
 import { Scene } from "../../engine/scene/Scene";
@@ -53,7 +53,7 @@ export class Sunflower extends SunHarvestingPlant {
     }
 
     draw(renderer: Renderer): void {
-        this.sunflowerAnim.render(renderer, this.boundingBox);
+        this.sunflowerAnim.render(renderer, PIVOTS.TOP_LEFT, ...this.boundingBox);
     }
     
     dispose(): void {
