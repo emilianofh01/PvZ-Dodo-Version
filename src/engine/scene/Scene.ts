@@ -24,9 +24,10 @@ export class Scene implements IScene {
         await ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, "./assets/img/1.jpg"));
     }
 
-    addEntity(provider: (scene: Scene) => Entity) {
+    addEntity<T extends Entity>(provider: (scene: Scene) => T) {
         const entity = provider(this)
         this.entities.push(entity);
+        return entity;
     }
 
     removeEntity(entity: Entity){

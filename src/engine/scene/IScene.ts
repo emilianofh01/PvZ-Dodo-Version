@@ -9,5 +9,5 @@ export default interface IScene {
     update(delta: number): void;
     render(renderer: Renderer): void;
     dispose(): void;
-    addEntity(provider: (scene: Scene) => Entity): void;
+    addEntity<T extends Entity>(provider: (scene: Scene) => T): T;
 }
