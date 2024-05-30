@@ -7,18 +7,23 @@ import { SpriteSheet } from "$/sprites/spritesheet";
 import Entity from "src/entities/Entity";
 import { SunEntity } from "src/entities/SunEntity";
 import { Sunflower } from "src/entities/plant/Sunflower";
+import {GameBoard} from "../entities/board.ts";
+import {AbstractPlantEntity} from "../../entities/plant/PlantEntity.ts";
 
-interface PlantFactoryProps {
+export interface PlantFactoryProps {
     position: [number, number]
 }
 
-interface PlantEntry {
+export interface PlantEntry {
     name: string;
     description: string;
     idleAnimation: SpriteSheetAnimation;
     cost: number;
+    canPlant?: (pos: [number, number], board: GameBoard) => boolean;
     factory: (props: PlantFactoryProps, scene: Scene) => Entity;
 }
+
+const REQUIRE_EMPTY = (pos: [number, number], board: GameBoard) => !board.gridMap.get(pos[0])?.get(pos[1])?.find(e => e instanceof AbstractPlantEntity)
 
 const PLANTS_REGISTRY = new Registry<PlantEntry>();
 
@@ -26,6 +31,7 @@ PLANTS_REGISTRY.add("dodo:sunflower", {
     name: "Sunflower",
     description: "Sunflower can't resist bouncing to the beat. Which beat is that? Why, the life-giving jazzy rhythm of the Earth itself, thumping at a frequency only Sunflower can hear.",
     cost: 50,
+    canPlant: REQUIRE_EMPTY,
     idleAnimation: new SpriteSheetAnimation(
         new SpriteSheet(
             ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, "./assets/img/sunflower_glow.png")), 
