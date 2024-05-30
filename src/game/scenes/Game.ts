@@ -11,14 +11,14 @@ export class Game extends Scene {
     constructor(dodo: Dodo) {
         super(dodo);
         this.addEntity(_ => new SunCounter(this.getSun));
-        this.addEntity(s => new GameBoard(s))
+        const board = this.addEntity(s => new GameBoard(s))
         this.addEntity(s => new SunEntity({
             degreesPerSecond: 90,
             position: [90, 90],
             size: [32, 32],
             sunAmount: 90
         }, s.dodo))
-        this.addEntity(e => new CardHolder())
+        this.addEntity(scene => new CardHolder(scene, board))
     }
     
     
