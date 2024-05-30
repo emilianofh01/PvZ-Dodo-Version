@@ -53,4 +53,17 @@ export class SpriteSheet {
         const y = col * (group.cell_size[1] + group.padding[1]);
         context.drawImage(this.image, x, y, ...group.cell_size, dest_x, dest_y, dest_w ?? group.cell_size[0], dest_h ?? group.cell_size[1]);
     }
+    
+    drawImagePivoted(context: CanvasRenderingContext2D, group_name: string, index: number, pivot: [number, number], dest_x: number, dest_y: number, dest_w?: number, dest_h?: number){
+        if(this.image == null) return;
+        if(!this.groups.has(group_name)) return;
+        const group = notNullOrUndefined(this.groups.get(group_name))
+        const col = Math.floor(index / group.grid_size[0]);
+        const row = index % group.grid_size[1];
+        const x = row * (group.cell_size[0] + group.padding[0]);
+        const y = col * (group.cell_size[1] + group.padding[1]);
+        dest_w ??= group.cell_size[0];
+        dest_h ??= group.cell_size[1];
+        context.drawImage(this.image, x, y, ...group.cell_size, dest_x - (pivot[0] * dest_w), dest_y - (pivot[1] * dest_h),  dest_w, dest_h);
+    }
 }
