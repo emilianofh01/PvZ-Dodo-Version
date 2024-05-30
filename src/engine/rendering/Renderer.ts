@@ -1,6 +1,6 @@
 import IScene from "../scene/IScene";
 import { notNull } from "../../utils/Objects";
-import { IGUIController } from "../../gui/controller";
+import { IGUIController } from "$/gui/controller";
 
 declare global {
     interface CanvasRenderingContext2D extends CanvasRenderingContext2DEx {}
