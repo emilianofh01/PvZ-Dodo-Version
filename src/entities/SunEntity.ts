@@ -53,7 +53,6 @@ export class SunEntity<T extends SunProperties = SunProperties> implements Entit
     
     draw(renderer: Renderer) {
         if(!this.sunSprite) return;
-        renderer.context.renderRect("#f00",...this._boundingBoxWPivot);
         renderer.context.drawImageRotated(this.sunSprite, this.rotation / 1000 * Math.PI / 180, PIVOTS.MID_CENTER, this.boundingBox[0], this.boundingBox[1], this.boundingBox[2] * this.scale, this.boundingBox[3] * this.scale);
     }
 
