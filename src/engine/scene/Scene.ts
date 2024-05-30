@@ -17,7 +17,7 @@ export class Scene implements IScene {
     }
 
     dispose(): void {
-        throw new Error("Method not implemented.");
+        this.entities.forEach(e => e.dispose());
     }
 
     async preload(): Promise<void> {
@@ -30,6 +30,7 @@ export class Scene implements IScene {
     }
 
     removeEntity(entity: Entity){
+        entity.dispose();
         this.entities = this.entities.filter(e => e != entity);
     }
 
