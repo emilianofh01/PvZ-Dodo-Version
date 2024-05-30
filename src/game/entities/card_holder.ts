@@ -33,8 +33,11 @@ export class CardHolder implements Entity{
 
     mouseDown = (event: MouseEventData) => {
         if(event.button != MouseButton.Primary) return;
-        this.selectedCardIndex = -1;
-        if(event.type == MouseEventType.MouseUp) return;
+        if(event.type == MouseEventType.MouseUp) {
+            if(this.selectedCardIndex < 0 || !point2Rect(event.position, this.board.boundingBox)) return;
+            this.board.takeAction(event, this.cards[this.selectedCardIndex]);
+            this.selectedCardIndex = -1;
+        }
         if(!point2Rect(event.position, this.boundingBox)) return;
         const relativePos = [
             event.position[0] - this.boundingBox[0],
