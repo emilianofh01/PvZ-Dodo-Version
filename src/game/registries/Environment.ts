@@ -23,8 +23,8 @@ ENVIRONMENTS_REGISTRY.add("dodo:sunny", {
                 startPosition, 
                 endPosition,
                 size: [32, 32],
-                sunAmount: 50,
-                transitionDutarion: 10000
+                sunAmount,
+                transitionDutarion: duration
             },
             scene.dodo
         )
