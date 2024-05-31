@@ -6,12 +6,22 @@ import Renderer, {PIVOTS} from "../engine/rendering/Renderer.ts";
 import { MOUSE, MouseButton, MouseEventData } from "$/input/mouse.ts";
 import { point2Rect } from "$/core/collision.ts";
 import { Game } from "src/game/scenes/Game.ts";
+import { lerp } from "src/utils/interpolation.ts";
 
 export interface SunProperties {
     degreesPerSecond: number
     position: [number, number]
     size: [number, number]
+    startPosition?: [number, number]
+    endPosition?: [number, number]
+    transitionDutarion?: number
     sunAmount: number
+}
+
+interface TransitionProps {
+    duration: number
+    startPos: [number, number]
+    endPos: [number, number]
 }
 
 export class SunEntity<T extends SunProperties = SunProperties> implements Entity {
@@ -20,6 +30,9 @@ export class SunEntity<T extends SunProperties = SunProperties> implements Entit
     dodo: Dodo;
     sunSprite: CanvasImageSource | null;
     scale: number = 1;
+    transition: number = 0;
+
+    transitionData: TransitionProps | null = null;
     
     _boundingBox: [number,number,number,number];
     _boundingBoxWPivot: [number,number,number,number];
@@ -41,6 +54,13 @@ export class SunEntity<T extends SunProperties = SunProperties> implements Entit
         this._boundingBox = [...props.position, ...props.size];
         this._boundingBoxWPivot = [props.position[0] - props.size[0] * .5, props.position[1] - props.size[1] * .5, ...props.size];
         this.dodo.listener_manager.addEventListener(MOUSE, this.on_click)
+        if(props.startPosition && props.endPosition && props.transitionDutarion){
+            this.transitionData = {
+                endPos: props.endPosition,
+                startPos: props.startPosition,
+                duration: props.transitionDutarion
+            }
+        }
     }
     
     tick(delta: number){
@@ -49,6 +69,19 @@ export class SunEntity<T extends SunProperties = SunProperties> implements Entit
             this.rotation = this.rotation % 360000;
         }
         this.scale = 1 + (Math.cos((this.rotation / 1000 * Math.PI / 180) * 7) * .2) / 2;
+
+        if(this.transitionData){
+            this.transition += delta;
+            this._boundingBox[0] = lerp(this.transitionData.startPos[0], this.transitionData.endPos[0], this.transition / this.transitionData.duration);
+            this._boundingBox[1] = lerp(this.transitionData.startPos[1], this.transitionData.endPos[1], this.transition / this.transitionData.duration);
+            if(this.transition > this.transitionData.duration) {
+                this.transition = this.transitionData.duration;
+                this._boundingBox[0] = this.transitionData.endPos[0];
+                this._boundingBox[1] = this.transitionData.endPos[1];
+                this.transitionData = null;
+            }
+            this._boundingBoxWPivot = [this._boundingBox[0] - this._boundingBox[2] * .5, this._boundingBox[1] - this._boundingBox[3] * .5, this._boundingBox[2], this._boundingBox[3]];
+        }
     }
     
     draw(renderer: Renderer) {
