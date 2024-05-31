@@ -29,9 +29,9 @@ export class SunnyEnvironment implements Entity {
                 (scene) => this.sunProvider(
                     [sunX, -32],
                     [sunX, sunEndY],
-                    5,
-                    10,
-                    50,
+                    5000,
+                    10000,
+                    25,
                     scene
                 )
             );
