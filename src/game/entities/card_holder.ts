@@ -55,6 +55,7 @@ export class CardHolder implements Entity{
             Math.floor(relativePos[0] / widthWithPadding[0]),
             Math.floor(relativePos[1] / widthWithPadding[1])
         ]
+        if(card_i[0] < 0 || card_i[0] - 1 > this.cards.length) return;
         if(this.cards[card_i[0]].cost > (this.scene as Game).currentSun) return;
         this.selectedCardIndex = card_i[0];
     }
