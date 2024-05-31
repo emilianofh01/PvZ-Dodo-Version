@@ -32,15 +32,14 @@ export class GameBoard implements Entity {
         ];
     }
 
-    takeAction(event: MouseEventData, card: PlantEntry){
+    takeAction(event: MouseEventData, card: PlantEntry): boolean{
         const cell : [number, number] = [
             Math.floor((event.position[0] - this.position[0]) / this.cell_size[0]),
             Math.floor((event.position[1] - this.position[1]) / this.cell_size[1])
         ];
         
         if (card.canPlant && !card.canPlant(cell, this)){
-            console.log("srry")
-            return;
+            return false;
         }
 
         const plant = this.scene.addEntity(
@@ -60,6 +59,7 @@ export class GameBoard implements Entity {
         if(!this.gridMap.get(cell[0])){
             this.gridMap.set(cell[0], row);
         }
+        return true;
     }
 
     placePlant(pos: [number, number], plantConstructor: ((props: PlantFactoryProps, scene: Scene) => Entity)) {

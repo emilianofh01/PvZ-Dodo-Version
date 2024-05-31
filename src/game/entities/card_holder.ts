@@ -6,6 +6,7 @@ import {Scene} from "$/scene/Scene.ts";
 import {MOUSE_MOVE, MouseMoveEventData} from "$/input/mouse_movement.ts";
 import {point2Rect} from "$/core/collision.ts";
 import {MOUSE, MouseButton, MouseEventData, MouseEventType} from "$/input/mouse.ts";
+import { Game } from "../scenes/Game.ts";
 
 export class CardHolder implements Entity{
     readonly zIndex: number = 0;
@@ -35,7 +36,9 @@ export class CardHolder implements Entity{
         if(event.button != MouseButton.Primary) return;
         if(event.type == MouseEventType.MouseUp) {
             if(this.selectedCardIndex < 0 || !point2Rect(event.position, this.board.boundingBox)) return;
-            this.board.takeAction(event, this.cards[this.selectedCardIndex]);
+            if (this.board.takeAction(event, this.cards[this.selectedCardIndex])){   
+                (this.scene as Game).currentSun -= this.cards[this.selectedCardIndex].cost;
+            }
             this.selectedCardIndex = -1;
         }
         if(!point2Rect(event.position, this.boundingBox)) return;
@@ -52,6 +55,7 @@ export class CardHolder implements Entity{
             Math.floor(relativePos[0] / widthWithPadding[0]),
             Math.floor(relativePos[1] / widthWithPadding[1])
         ]
+        if(this.cards[card_i[0]].cost > (this.scene as Game).currentSun) return;
         this.selectedCardIndex = card_i[0];
     }
 
