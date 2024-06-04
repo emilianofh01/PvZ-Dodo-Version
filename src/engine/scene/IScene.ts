@@ -10,4 +10,5 @@ export default interface IScene {
     render(renderer: Renderer): void;
     dispose(): void;
     addEntity<T extends Entity>(provider: (scene: Scene) => T): T;
+    removeEntity(entity: Entity);
 }
