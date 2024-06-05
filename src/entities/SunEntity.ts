@@ -3,7 +3,7 @@ import Dodo from '../engine/Dodo.ts';
 import ResourceManagement from '../engine/resource_management/ResourceManager.ts';
 import { ASSET_TYPES, AssetKey } from '../engine/resource_management/IResourceLoader.ts';
 import Renderer, { PIVOTS } from '../engine/rendering/Renderer.ts';
-import { MOUSE, MouseButton, MouseEventData } from '$/input/mouse.ts';
+import { MOUSE, MouseButton, MouseEventData, MouseEventType } from '$/input/mouse.ts';
 import { point2Rect } from '$/core/collision.ts';
 import { Game } from 'src/game/scenes/Game.ts';
 import { lerp } from 'src/utils/interpolation.ts';
@@ -96,8 +96,9 @@ export class SunEntity<T extends SunProperties = SunProperties> implements Entit
     }
 
     on_click = (event: MouseEventData) => {
-        if (event.button !== MouseButton.Primary) return;
         if (!point2Rect(event.position, this._boundingBoxWPivot)) return;
+        event.markAsHandled();
+        if (event.button !== MouseButton.Primary || event.type != MouseEventType.MouseDown) return;
         if (this.dodo.currentScene instanceof Game) {
             this.dodo.currentScene.currentSun += this.properties.sunAmount;
             this.dodo.currentScene.removeEntity(this);

@@ -42,6 +42,8 @@ export class MouseEventData {
 
     public readonly buttons_pressed: number;
 
+    private _handled: boolean = false;
+
     constructor(type: MouseEventType, position: Pos, screenPosition: Pos, documentPosition: Pos, altKey: boolean, ctrlKey: boolean, button: MouseButton, buttons_pressed: number, previous_pos?: Pos) {
         this.position = position;
         this.screenPosition = screenPosition;
@@ -52,6 +54,14 @@ export class MouseEventData {
         this.buttons_pressed = buttons_pressed;
         this.type = type;
         this.previous_pos = previous_pos ?? [...this.position];
+    }
+
+    get handled() {
+        return this._handled;
+    }
+
+    markAsHandled() {
+        this._handled = true;
     }
 
     static of(element: HTMLCanvasElement, type: MouseEventType, event: MouseEvent, previous_pos?: Pos) {
@@ -117,7 +127,14 @@ export class MouseBroadcaster implements InputBroadcaster<MouseEventData> {
 
     dispatchEvent(event: MouseEventData): boolean {
         let d = false;
-        this.callbacks.forEach(e => e(event) && (d = true));
+        const arr = [...this.callbacks];
+        for (let i = arr.length - 1; i >= 0; i--) {
+            arr[i](event);
+            if (event.handled) {
+                return true;
+            }
+            d = true;
+        }
         return d;
     }
 
