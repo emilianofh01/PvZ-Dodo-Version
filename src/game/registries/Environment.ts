@@ -1,16 +1,16 @@
-import Entity from 'src/entities/Entity'
-import { Game } from '../scenes/Game'
-import { Registry } from '$/core/registry'
-import { SunnyEnvironment } from '../entities/environments/sunny'
-import { Scene } from '$/scene/Scene'
-import { SunEntity } from 'src/entities/SunEntity'
+import Entity from 'src/entities/Entity';
+import { Game } from '../scenes/Game';
+import { Registry } from '$/core/registry';
+import { SunnyEnvironment } from '../entities/environments/sunny';
+import { Scene } from '$/scene/Scene';
+import { SunEntity } from 'src/entities/SunEntity';
 
 export interface EnvironmentEntry {
   isSunny: boolean
   factory: (game: Game) => Entity
 }
 
-export const ENVIRONMENTS_REGISTRY = new Registry<EnvironmentEntry>()
+export const ENVIRONMENTS_REGISTRY = new Registry<EnvironmentEntry>();
 
 ENVIRONMENTS_REGISTRY.add('dodo:sunny', {
   isSunny: true,
@@ -24,9 +24,9 @@ ENVIRONMENTS_REGISTRY.add('dodo:sunny', {
         endPosition,
         size: [32, 32],
         sunAmount,
-        transitionDutarion: duration
+        transitionDutarion: duration,
       },
-      scene.dodo
-    )
-  )
-})
+      scene.dodo,
+    ),
+  ),
+});

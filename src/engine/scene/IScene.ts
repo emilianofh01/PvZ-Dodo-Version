@@ -1,6 +1,6 @@
-import Renderer, { BackdropFill } from '../rendering/Renderer'
-import { Scene } from './Scene.ts'
-import Entity from '../../entities/Entity.ts'
+import Renderer, { BackdropFill } from '../rendering/Renderer';
+import { Scene } from './Scene.ts';
+import Entity from '../../entities/Entity.ts';
 
 export default interface IScene {
   readonly fill: BackdropFill

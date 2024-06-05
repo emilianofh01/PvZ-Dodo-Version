@@ -2,6 +2,8 @@ export interface IDisposable {
   dispose: () => void
 }
 
-export type Partial<T> = {
+type PartialObject<T> = {
   [key in keyof T ]?: T[key]
-}
+};
+
+export type { PartialObject };

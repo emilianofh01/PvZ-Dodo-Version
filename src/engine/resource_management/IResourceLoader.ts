@@ -17,40 +17,42 @@ export interface AssetTypeMap {
 export const ASSET_TYPES: AssetTypeMap = {
   IMAGE: {
     key: 'image',
-    async load (key) {
-      const data = await fetch(key.url)
-      const imageBlob = await data.blob()
-      const imageObjectURL = URL.createObjectURL(imageBlob)
+    async load(key) {
+      const data = await fetch(key.url);
+      const imageBlob = await data.blob();
+      const imageObjectURL = URL.createObjectURL(imageBlob);
 
-      const image = document.createElement('img')
-      image.src = imageObjectURL
-      await (new Promise((res) => image.onload = res))
-      return image
-    }
+      const image = document.createElement('img');
+      image.src = imageObjectURL;
+      await (new Promise((res) => image.onload = res));
+      return image;
+    },
   },
   AUDIO: {
     key: 'audio',
-    async load (key) {
-      const data = await fetch(key.url)
-      const audioBlob = await data.blob()
-      const audioObjectURL = URL.createObjectURL(audioBlob)
-      const audio = document.createElement('audio')
-      audio.src = audioObjectURL
-      await (new Promise((res) => audio.onload = res))
-      return audio
-    }
-  }
-}
+    async load(key) {
+      const data = await fetch(key.url);
+      const audioBlob = await data.blob();
+      const audioObjectURL = URL.createObjectURL(audioBlob);
+      const audio = document.createElement('audio');
+      audio.src = audioObjectURL;
+      await (new Promise((res) => audio.onload = res));
+      return audio;
+    },
+  },
+};
 
 export class AssetKey<T extends typeof ASSET_TYPES[keyof AssetTypeMap]> implements IAssetKey<T> {
-  readonly type: T
-  readonly url: string
-  readonly key: string
+  readonly type: T;
 
-  constructor (asset_type: T, url: string) {
-    this.type = asset_type
-    this.url = url
-    this.key = this.type.key + '_' + url
+  readonly url: string;
+
+  readonly key: string;
+
+  constructor(asset_type: T, url: string) {
+    this.type = asset_type;
+    this.url = url;
+    this.key = this.type.key + '_' + url;
   }
 }
 

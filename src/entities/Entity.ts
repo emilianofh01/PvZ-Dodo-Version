@@ -1,4 +1,4 @@
-import Renderer from '../engine/rendering/Renderer'
+import Renderer from '../engine/rendering/Renderer';
 
 export default interface Entity {
   readonly zIndex: number

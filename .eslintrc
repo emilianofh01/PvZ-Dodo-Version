@@ -1,8 +1,20 @@
 {
-    "root": true,
     "extends": [
-        "./node_modules/ts-standard/eslintrc.json"
+        "airbnb-typescript"
     ],
+    "rules": {
+        "react/jsx-filename-extension": "off",
+        "import/extensions": "off",
+        "import/no-extraneous-dependencies": "off",
+        "no-unused-vars": [
+            "error",
+            { "varsIgnorePattern": "_", "argsIgnorePattern": "_" }
+        ],
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            { "varsIgnorePattern": "_", "argsIgnorePattern": "_" }
+        ]
+    },
     "parserOptions": {
         "project": [
             "tsconfig.json"
