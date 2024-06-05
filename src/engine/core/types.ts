@@ -1,7 +1,7 @@
 export interface IDisposable {
-    dispose(): void;
+  dispose: () => void
 }
 
 export type Partial<T> = {
-    [key in keyof T ]?: T[key]   
+  [key in keyof T ]?: T[key]
 }

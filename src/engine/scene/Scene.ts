@@ -1,46 +1,45 @@
-import Renderer, { BackdropFill } from "../rendering/Renderer";
-import Dodo from "../Dodo";
-import IScene from "./IScene";
-import ResourceManagement from "../resource_management/ResourceManager";
-import { ASSET_TYPES, AssetKey } from "../resource_management/IResourceLoader";
-import Entity from "../../entities/Entity";
+import Renderer, { BackdropFill } from '../rendering/Renderer'
+import Dodo from '../Dodo'
+import IScene from './IScene'
+import ResourceManagement from '../resource_management/ResourceManager'
+import { ASSET_TYPES, AssetKey } from '../resource_management/IResourceLoader'
+import Entity from '../../entities/Entity'
 
 export class Scene implements IScene {
-    dodo: Dodo;
-    entities: Entity[];
+  dodo: Dodo
+  entities: Entity[]
 
-    public readonly fill: BackdropFill = "#070";
-    
-    constructor(dodo: Dodo){
-        this.dodo = dodo;
-        this.entities = [];
-    }
+  public readonly fill: BackdropFill = '#070'
 
-    dispose(): void {
-        this.entities.forEach(e => e.dispose());
-    }
+  constructor (dodo: Dodo) {
+    this.dodo = dodo
+    this.entities = []
+  }
 
-    async preload(): Promise<void> {
-        await ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, "./assets/img/1.jpg"));
-    }
+  dispose (): void {
+    this.entities.forEach(e => e.dispose())
+  }
 
-    addEntity<T extends Entity>(provider: (scene: Scene) => T) {
-        const entity = provider(this)
-        this.entities.push(entity);
-        return entity;
-    }
+  async preload (): Promise<void> {
+    await ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './assets/img/1.jpg'))
+  }
 
-    removeEntity(entity: Entity){
-        entity.dispose();
-        this.entities = this.entities.filter(e => e != entity);
-    }
+  addEntity<T extends Entity>(provider: (scene: Scene) => T) {
+    const entity = provider(this)
+    this.entities.push(entity)
+    return entity
+  }
 
-    update(delta: number): void {
-        this.entities.forEach(e => e.tick(delta))
-    }
+  removeEntity (entity: Entity) {
+    entity.dispose()
+    this.entities = this.entities.filter(e => e != entity)
+  }
 
-    render(renderer: Renderer): void {
-        this.entities.forEach(e => e.draw(renderer));
-    }
+  update (delta: number): void {
+    this.entities.forEach(e => e.tick(delta))
+  }
 
+  render (renderer: Renderer): void {
+    this.entities.forEach(e => e.draw(renderer))
+  }
 }
