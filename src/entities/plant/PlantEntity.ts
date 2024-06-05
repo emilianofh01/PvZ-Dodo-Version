@@ -3,34 +3,34 @@ import Renderer from '../../engine/rendering/Renderer.ts';
 import Dodo from '../../engine/Dodo.ts';
 
 export interface PlantProperties {
-  cooldown: number
+    cooldown: number
 }
 
 export abstract class AbstractPlantEntity<P extends PlantProperties> implements Entity {
-  abstract get boundingBox(): [number, number, number, number];
-  abstract readonly zIndex: number;
+    abstract get boundingBox(): [number, number, number, number];
+    abstract readonly zIndex: number;
 
-  protected dodo: Dodo;
+    protected dodo: Dodo;
 
-  properties: P;
+    properties: P;
 
-  cooldownElapsed: number = 0;
+    cooldownElapsed: number = 0;
 
-  constructor(props: P, dodo: Dodo) {
-    this.properties = props;
-    this.dodo = dodo;
-    this.cooldownElapsed = this.properties.cooldown;
-  }
-
-  tick(delta: number): void {
-    if (this.cooldownElapsed > 0) {
-      this.cooldownElapsed -= delta;
-      return;
+    constructor(props: P, dodo: Dodo) {
+        this.properties = props;
+        this.dodo = dodo;
+        this.cooldownElapsed = this.properties.cooldown;
     }
-    if (this.fixedTick()) { this.cooldownElapsed = this.properties.cooldown; }
-  }
 
-  abstract fixedTick(): boolean;
-  abstract draw(renderer: Renderer): void;
-  abstract dispose(): void;
+    tick(delta: number): void {
+        if (this.cooldownElapsed > 0) {
+            this.cooldownElapsed -= delta;
+            return;
+        }
+        if (this.fixedTick()) { this.cooldownElapsed = this.properties.cooldown; }
+    }
+
+    abstract fixedTick(): boolean;
+    abstract draw(renderer: Renderer): void;
+    abstract dispose(): void;
 }

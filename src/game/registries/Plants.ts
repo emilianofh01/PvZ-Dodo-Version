@@ -11,16 +11,16 @@ import { GameBoard } from '../entities/board.ts';
 import { AbstractPlantEntity } from '../../entities/plant/PlantEntity.ts';
 
 export interface PlantFactoryProps {
-  position: [number, number]
+    position: [number, number]
 }
 
 export interface PlantEntry {
-  name: string
-  description: string
-  idleAnimation: SpriteSheetAnimation
-  cost: number
-  canPlant?: (pos: [number, number], board: GameBoard) => boolean
-  factory: (props: PlantFactoryProps, scene: Scene) => Entity
+    name: string
+    description: string
+    idleAnimation: SpriteSheetAnimation
+    cost: number
+    canPlant?: (pos: [number, number], board: GameBoard) => boolean
+    factory: (props: PlantFactoryProps, scene: Scene) => Entity
 }
 
 const REQUIRE_EMPTY = (pos: [number, number], board: GameBoard) => (board.gridMap.get(pos[0])?.get(pos[1])?.find(e => e instanceof AbstractPlantEntity)) == null;
@@ -28,39 +28,39 @@ const REQUIRE_EMPTY = (pos: [number, number], board: GameBoard) => (board.gridMa
 const PLANTS_REGISTRY = new Registry<PlantEntry>();
 
 PLANTS_REGISTRY.add('dodo:sunflower', {
-  name: 'Sunflower',
-  description: "Sunflower can't resist bouncing to the beat. Which beat is that? Why, the life-giving jazzy rhythm of the Earth itself, thumping at a frequency only Sunflower can hear.",
-  cost: 50,
-  canPlant: REQUIRE_EMPTY,
-  idleAnimation: new SpriteSheetAnimation(
-    new SpriteSheet(
-      ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './assets/img/sunflower_glow.png')),
-      {
-        groups: [
-          {
-            cell_size: [31, 31],
-            grid_size: [3, 3],
-            name: 'default',
-            padding: [1, 1],
-            x: 0,
-            y: 1,
-            frames: 7,
-          },
-        ],
-      },
+    name: 'Sunflower',
+    description: "Sunflower can't resist bouncing to the beat. Which beat is that? Why, the life-giving jazzy rhythm of the Earth itself, thumping at a frequency only Sunflower can hear.",
+    cost: 50,
+    canPlant: REQUIRE_EMPTY,
+    idleAnimation: new SpriteSheetAnimation(
+        new SpriteSheet(
+            ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './assets/img/sunflower_glow.png')),
+            {
+                groups: [
+                    {
+                        cell_size: [31, 31],
+                        grid_size: [3, 3],
+                        name: 'default',
+                        padding: [1, 1],
+                        x: 0,
+                        y: 1,
+                        frames: 7,
+                    },
+                ],
+            },
+        ),
+        'default',
+        6,
     ),
-    'default',
-    6,
-  ),
-  factory(props: PlantFactoryProps, scene: Scene) {
-    return new Sunflower(
-      {
-        position: props.position,
-      },
-      (position, sunAmount, constructorScene) => new SunEntity({ degreesPerSecond: 90, position, size: [32, 32], sunAmount }, constructorScene.dodo),
-      scene.dodo,
-    );
-  },
+    factory(props: PlantFactoryProps, scene: Scene) {
+        return new Sunflower(
+            {
+                position: props.position,
+            },
+            (position, sunAmount, constructorScene) => new SunEntity({ degreesPerSecond: 90, position, size: [32, 32], sunAmount }, constructorScene.dodo),
+            scene.dodo,
+        );
+    },
 });
 
 export default PLANTS_REGISTRY;

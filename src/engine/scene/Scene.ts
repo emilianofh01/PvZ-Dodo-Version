@@ -6,41 +6,41 @@ import { ASSET_TYPES, AssetKey } from '../resource_management/IResourceLoader';
 import Entity from '../../entities/Entity';
 
 export class Scene implements IScene {
-  dodo: Dodo;
+    dodo: Dodo;
 
-  entities: Entity[];
+    entities: Entity[];
 
-  public readonly fill: BackdropFill = '#070';
+    public readonly fill: BackdropFill = '#070';
 
-  constructor(dodo: Dodo) {
-    this.dodo = dodo;
-    this.entities = [];
-  }
+    constructor(dodo: Dodo) {
+        this.dodo = dodo;
+        this.entities = [];
+    }
 
-  dispose(): void {
-    this.entities.forEach(e => e.dispose());
-  }
+    dispose(): void {
+        this.entities.forEach(e => e.dispose());
+    }
 
-  async preload(): Promise<void> {
-    await ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './assets/img/1.jpg'));
-  }
+    async preload(): Promise<void> {
+        await ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './assets/img/1.jpg'));
+    }
 
-  addEntity<T extends Entity>(provider: (scene: Scene) => T) {
-    const entity = provider(this);
-    this.entities.push(entity);
-    return entity;
-  }
+    addEntity<T extends Entity>(provider: (scene: Scene) => T) {
+        const entity = provider(this);
+        this.entities.push(entity);
+        return entity;
+    }
 
-  removeEntity(entity: Entity) {
-    entity.dispose();
-    this.entities = this.entities.filter(e => e != entity);
-  }
+    removeEntity(entity: Entity) {
+        entity.dispose();
+        this.entities = this.entities.filter(e => e != entity);
+    }
 
-  update(delta: number): void {
-    this.entities.forEach(e => e.tick(delta));
-  }
+    update(delta: number): void {
+        this.entities.forEach(e => e.tick(delta));
+    }
 
-  render(renderer: Renderer): void {
-    this.entities.forEach(e => e.draw(renderer));
-  }
+    render(renderer: Renderer): void {
+        this.entities.forEach(e => e.draw(renderer));
+    }
 }
