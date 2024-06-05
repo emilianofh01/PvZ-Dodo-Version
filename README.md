@@ -1,6 +1,6 @@
 <div>
     <a href="https://dododev.net/">
-        <img src="./src/assets/img/svg/logo_gradient.svg" alt="PvZ Logo" width="30">
+        <img src="./public/assets/img/logo_gradient.svg" alt="PvZ Logo" width="30">
     </a>
     <h1 style="margin: 0">
         <span>PvZ Dodo's Version</span>
