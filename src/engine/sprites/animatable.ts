@@ -6,29 +6,75 @@ interface AnimationProps {
   framesPerSecond: number
 }
 
-export abstract class DodoAnimation<T extends AnimationProps = AnimationProps> {
+export class DodoAnimationEvent extends Event {
+}
+
+interface DodoAnimationEventMap {
+  'start': DodoAnimationEvent;
+  'end': DodoAnimationEvent;
+  'step': DodoAnimationEvent;
+}
+
+export abstract class AbstractAnimation<T extends AnimationProps = AnimationProps> extends EventTarget {
   props: T;
 
-  private timeElapsed: number;
+  private _timeElapsed: number;
+
+  public get timeElapsed() : number {
+    return this._timeElapsed;
+  }
+
+  protected started: boolean = false;
 
   secondsPerFrame: number;
 
   constructor(props: T) {
+    super();
     this.props = props;
-    this.timeElapsed = 0;
+    this._timeElapsed = 0;
     this.secondsPerFrame = 1 / this.props.framesPerSecond;
   }
 
   animate(delta: number): void {
-    this.timeElapsed += delta;
-    while (this.timeElapsed >= this.secondsPerFrame * 1000) {
-      this.timeElapsed -= this.secondsPerFrame * 1000;
+    this.handleStarted();
+    this._timeElapsed += delta;
+    while (this._timeElapsed >= this.secondsPerFrame * 1000) {
+      this._timeElapsed -= this.secondsPerFrame * 1000;
       this.nextFrame();
     }
   }
 
+  protected handleStarted() {
+    if (this.started == false) {
+      this.started = true;
+      this.onStarted();
+    }
+  }
+
+  protected onStarted() {
+    this.dispatchEvent(new DodoAnimationEvent('start'));
+  }
+
+  protected onEnded() {
+    this.dispatchEvent(new DodoAnimationEvent('ended'));
+  }
+
+  protected onStep() {
+    this.dispatchEvent(new DodoAnimationEvent('step'));
+  }
+
+
+  addEventListener<K extends keyof DodoAnimationEventMap>(type: K, listener: (this: Animation, ev: DodoAnimationEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void {
+    super.addEventListener(type, listener, options);
+  }
+  
+  removeEventListener<K extends keyof DodoAnimationEventMap>(type: K, listener: (this: Animation, ev: DodoAnimationEventMap[K]) => any, options?: boolean | EventListenerOptions): void {
+    super.removeEventListener(type, listener, options);
+  }
+
   abstract ended(): boolean;
   abstract progress(): number;
+  abstract duration(): number;
   abstract restart(): void;
   abstract nextFrame(): void;
   abstract render(renderer: Renderer, pivot: [number, number], destX: number, destY: number, destW?: number, destH?: number): void;
@@ -41,7 +87,7 @@ export interface SpriteSheetAnimationProps extends AnimationProps {
   infinite: boolean
 }
 
-export class SpriteSheetAnimation extends DodoAnimation<SpriteSheetAnimationProps> {
+export class SpriteSheetAnimation extends AbstractAnimation<SpriteSheetAnimationProps> {
   currentFrame: number = 0;
 
   constructor(spriteSheet: SpriteSheet, groupName: string, framesPerSecond: number = 20, infinite: boolean = true) {
@@ -62,6 +108,9 @@ export class SpriteSheetAnimation extends DodoAnimation<SpriteSheetAnimationProp
       this.currentFrame %= this.props.totalFrames;
       if (!this.props.infinite) {
         this.currentFrame = this.props.totalFrames - 1;
+        this.onEnded();
+      } else {
+        this.onStep();
       }
     }
   }
@@ -84,5 +133,9 @@ export class SpriteSheetAnimation extends DodoAnimation<SpriteSheetAnimationProp
 
   progress(): number {
     return this.currentFrame / this.props.totalFrames;
+  }
+
+  duration(): number {
+    return this.props.totalFrames * 1000 / this.props.framesPerSecond;
   }
 }
