@@ -1,3 +1,4 @@
+import { AnimationController } from '$/sprites/animation';
 import Dodo from '../../engine/Dodo';
 import Renderer, { PIVOTS } from '../../engine/rendering/Renderer';
 import { ASSET_TYPES, AssetKey } from '../../engine/resource_management/IResourceLoader';
@@ -17,17 +18,17 @@ export class Sunflower extends SunHarvestingPlant {
 
   sunflowerAnim: SpriteSheetAnimation = new SpriteSheetAnimation(
     new SpriteSheet(
-      ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './assets/img/sunflower_glow.png')),
+      ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './assets/img/sunflower_idle.png')),
       {
         groups: [
           {
-            cell_size: [31, 31],
-            grid_size: [3, 3],
+            cell_size: [32, 32],
+            grid_size: [2, 3],
             name: 'default',
-            padding: [1, 1],
+            padding: [0, 0],
             x: 0,
             y: 0,
-            frames: 7,
+            frames: 6,
           },
         ],
       },
@@ -36,24 +37,61 @@ export class Sunflower extends SunHarvestingPlant {
     6,
   );
 
+  sunflowerGlowAnim: SpriteSheetAnimation = new SpriteSheetAnimation(
+    new SpriteSheet(
+      ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './assets/img/sunflower_glow.png')),
+      {
+        groups: [
+          {
+            cell_size: [32, 32],
+            grid_size: [3, 3],
+            name: 'default',
+            padding: [0, 0],
+            x: 0,
+            y: 0,
+            frames: 7,
+          },
+        ],
+      },
+    ),
+    'default',
+    7,
+  );
+
+  animationController = new AnimationController(this.sunflowerAnim);
+
   zIndex: number = 0;
 
   constructor(sunflowerProps: SunflowerProps, sunProvider: ((position: [number, number], sunAmount: number, scene: Scene) => Entity), dodo: Dodo) {
     super(sunProvider, {
-      cooldown: 24000,
+      cooldown: 5000,
       sunAmount: 25,
       sunSpawningPoint: [0.65, 0.65],
     }, dodo);
-    this.boundingBox = [...sunflowerProps.position, 31, 31];
+    this.boundingBox = [...sunflowerProps.position, 32, 32];
   }
+
+  animationSent = false;
 
   tick(delta: number): void {
     super.tick(delta);
-    this.sunflowerAnim.animate(delta);
+    this.animationController.update(delta);
+    if (this.cooldownElapsed <= this.sunflowerGlowAnim.duration() * .5 && !this.animationSent) {
+      this.animationController.addToQueue(this.sunflowerGlowAnim);
+      this.animationController.addToQueue(this.sunflowerAnim);
+      this.animationController.skip();
+      this.animationSent = true;
+    }
+  }
+
+  fixedTick(): boolean {
+    const n = super.fixedTick();
+    this.animationSent = false;
+    return n;
   }
 
   draw(renderer: Renderer): void {
-    this.sunflowerAnim.render(renderer, PIVOTS.TOP_LEFT, ...this.boundingBox);
+    this.animationController.render(renderer, PIVOTS.TOP_LEFT, ...this.boundingBox);
   }
 
   dispose(): void {
