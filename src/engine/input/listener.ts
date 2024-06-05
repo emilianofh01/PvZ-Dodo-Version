@@ -5,13 +5,13 @@ import { MouseMovementBroadcaster } from './mouse_movement.ts'
 import { MouseBroadcaster } from './mouse.ts'
 
 export class ListenerManager {
-  public static readonly DEFAULT_BROADCASTERS: Array<() => InputBroadcaster<unknown>> = [
+  public static readonly DEFAULT_BROADCASTERS: Array<() => InputBroadcaster<any>> = [
     () => new KeyboardBroadcaster(),
     () => new MouseMovementBroadcaster(),
     () => new MouseBroadcaster()
   ]
 
-  private readonly broadcasters: Map<Symbol, InputBroadcaster<unknown>> = new Map()
+  private readonly broadcasters: Map<Symbol, InputBroadcaster<any>> = new Map()
   readonly dodo: Dodo
 
   constructor (dodo: Dodo) {

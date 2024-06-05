@@ -44,26 +44,26 @@ export class BasicGuiController implements IGUIController {
     this.dodo.listener_manager.addEventListener(MOUSE_MOVE, this.mouseMove)
   }
 
-  mouseMove = (moveEvent: MouseMoveEventData) => {
-    ((this.currentMenu?.mouseMove) != null) && this.currentMenu?.mouseMove(moveEvent)
+  mouseMove = (moveEvent: MouseMoveEventData): void => {
+    this.currentMenu?.mouseMove?.(moveEvent)
   }
 
-  mouseEvent = (mouseEvent: MouseEventData) => {
+  mouseEvent = (mouseEvent: MouseEventData): void => {
     if (this.currentMenu == null) return
-    if (mouseEvent.type == MouseEventType.MouseDown) {
+    if (mouseEvent.type === MouseEventType.MouseDown) {
       ((this.currentMenu?.mouseDown) != null) && this.currentMenu.mouseDown(mouseEvent)
       return
     }
-    if (mouseEvent.type == MouseEventType.MouseUp) {
+    if (mouseEvent.type === MouseEventType.MouseUp) {
       ((this.currentMenu?.mouseUp) != null) && this.currentMenu.mouseUp(mouseEvent)
       return
     }
-    if (mouseEvent.type == MouseEventType.MouseClick) {
+    if (mouseEvent.type === MouseEventType.MouseClick) {
       ((this.currentMenu?.click) != null) && this.currentMenu.click(mouseEvent)
     }
   }
 
-  dispose () {
+  dispose (): void {
     this.overlays.forEach(e => e.dispose())
     this.currentMenu?.dispose()
     this.dodo.listener_manager.removeEventListener(MOUSE, this.mouseEvent)
@@ -81,15 +81,15 @@ export class BasicGuiController implements IGUIController {
     this.overlays.forEach(e => e.tick(delta))
   }
 
-  addOverlay (overlay: IGUIOverlay) {
+  addOverlay (overlay: IGUIOverlay): void {
     this.overlays.push(overlay)
   }
 
-  removeOverlay (overlay: IGUIOverlay) {
+  removeOverlay (overlay: IGUIOverlay): void {
     this.overlays.remove(overlay)?.dispose()
   }
 
-  setMenu (menu: IGUIMenu | null) {
+  setMenu (menu: IGUIMenu | null): void {
     this.currentMenu?.dispose()
     this.currentMenu = menu
   }
