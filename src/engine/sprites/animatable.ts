@@ -58,7 +58,7 @@ export class SpriteSheetAnimation extends DodoAnimation<SpriteSheetAnimationProp
     if (!this.props.infinite && this.ended()) return;
     this.currentFrame++;
 
-    if (this.currentFrame > this.props.totalFrames) {
+    if (this.currentFrame >= this.props.totalFrames) {
       this.currentFrame %= this.props.totalFrames;
       if (!this.props.infinite) {
         this.currentFrame = this.props.totalFrames - 1;
