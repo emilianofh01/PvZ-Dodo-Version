@@ -1,5 +1,5 @@
 import Dodo from '$/Dodo';
-import { Game } from './scenes/Game.ts';
+import MainScene from './scenes/MainScene.ts';
 
 export class PlantsVsZombies {
     readonly dodo: Dodo;
@@ -14,7 +14,7 @@ export class PlantsVsZombies {
     };
 
     run() {
-        this.dodo.transitionTo(e => new Game(e));
+        this.dodo.transitionTo(e => new MainScene(e));
         this.dodo.render();
         this.loop(0);
     }
