@@ -1,8 +1,7 @@
 import { AnimationController } from '$/sprites/animation';
 import Dodo from '../../engine/Dodo';
 import Renderer, { PIVOTS } from '../../engine/rendering/Renderer';
-import { ASSET_TYPES, AssetKey } from '../../engine/resource_management/IResourceLoader';
-import ResourceManagement from '../../engine/resource_management/ResourceManager';
+import { loadImage } from '../../engine/resource_management/ResourceManager';
 import { Scene } from '../../engine/scene/Scene';
 import { SpriteSheetAnimation } from '../../engine/sprites/animatable';
 import { SpriteSheet } from '../../engine/sprites/spritesheet';
@@ -18,7 +17,7 @@ export class Sunflower extends SunHarvestingPlant {
 
     sunflowerAnim: SpriteSheetAnimation = new SpriteSheetAnimation(
         new SpriteSheet(
-            ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './assets/img/sunflower_idle.png')),
+            loadImage('./assets/img/sunflower_idle.png'),
             {
                 groups: [
                     {
@@ -39,7 +38,7 @@ export class Sunflower extends SunHarvestingPlant {
 
     sunflowerGlowAnim: SpriteSheetAnimation = new SpriteSheetAnimation(
         new SpriteSheet(
-            ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './assets/img/sunflower_glow.png')),
+            loadImage('./assets/img/sunflower_glow.png'),
             {
                 groups: [
                     {
@@ -64,7 +63,7 @@ export class Sunflower extends SunHarvestingPlant {
 
     constructor(sunflowerProps: SunflowerProps, sunProvider: ((position: [number, number], sunAmount: number, scene: Scene) => Entity), dodo: Dodo) {
         super(sunProvider, {
-            cooldown: 5000,
+            cooldown: 20000,
             sunAmount: 25,
             sunSpawningPoint: [0.65, 0.65],
         }, dodo);
