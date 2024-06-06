@@ -1,14 +1,13 @@
 import { Registry } from '$/core/registry';
-import { ASSET_TYPES, AssetKey } from '$/resource_management/IResourceLoader';
-import ResourceManagement from '$/resource_management/ResourceManager';
 import { Scene } from '$/scene/Scene';
 import { SpriteSheetAnimation } from '$/sprites/animatable';
-import { SpriteSheet } from '$/sprites/spritesheet';
 import Entity from 'src/entities/Entity';
 import { SunEntity } from 'src/entities/SunEntity';
 import { Sunflower } from 'src/entities/plant/Sunflower';
 import { GameBoard } from '../entities/board.ts';
 import { AbstractPlantEntity } from '../../entities/plant/PlantEntity.ts';
+import SPRITESHEETS_REGISTRY from './SpriteSheets.ts';
+import { notNullOrUndefined } from 'src/utils/Objects.ts';
 
 export interface PlantFactoryProps {
     position: [number, number]
@@ -33,22 +32,7 @@ PLANTS_REGISTRY.add('dodo:sunflower', {
     cost: 50,
     canPlant: REQUIRE_EMPTY,
     idleAnimation: new SpriteSheetAnimation(
-        new SpriteSheet(
-            ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './assets/img/sunflower_glow.png')),
-            {
-                groups: [
-                    {
-                        cell_size: [31, 31],
-                        grid_size: [3, 3],
-                        name: 'default',
-                        padding: [1, 1],
-                        x: 0,
-                        y: 1,
-                        frames: 7,
-                    },
-                ],
-            },
-        ),
+        notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:sunflower_idle')),
         'default',
         6,
     ),
