@@ -1,12 +1,12 @@
 import { AnimationController } from '$/sprites/animation';
+import SPRITESHEETS_REGISTRY from 'src/game/registries/SpriteSheets';
 import Dodo from '../../engine/Dodo';
 import Renderer, { PIVOTS } from '../../engine/rendering/Renderer';
-import { loadImage } from '../../engine/resource_management/ResourceManager';
 import { Scene } from '../../engine/scene/Scene';
 import { SpriteSheetAnimation } from '../../engine/sprites/animatable';
-import { SpriteSheet } from '../../engine/sprites/spritesheet';
 import Entity from '../Entity';
 import { SunHarvestingPlant } from './SunHarvestingPlant';
+import { notNullOrUndefined } from 'src/utils/Objects';
 
 interface SunflowerProps {
     position: [number, number]
@@ -16,43 +16,13 @@ export class Sunflower extends SunHarvestingPlant {
     readonly boundingBox: [number, number, number, number];
 
     sunflowerAnim: SpriteSheetAnimation = new SpriteSheetAnimation(
-        new SpriteSheet(
-            loadImage('./assets/img/sunflower_idle.png'),
-            {
-                groups: [
-                    {
-                        cell_size: [32, 32],
-                        grid_size: [2, 3],
-                        name: 'default',
-                        padding: [0, 0],
-                        x: 0,
-                        y: 0,
-                        frames: 6,
-                    },
-                ],
-            },
-        ),
+        notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:sunflower_idle')),
         'default',
         6,
     );
 
     sunflowerGlowAnim: SpriteSheetAnimation = new SpriteSheetAnimation(
-        new SpriteSheet(
-            loadImage('./assets/img/sunflower_glow.png'),
-            {
-                groups: [
-                    {
-                        cell_size: [32, 32],
-                        grid_size: [3, 3],
-                        name: 'default',
-                        padding: [0, 0],
-                        x: 0,
-                        y: 0,
-                        frames: 7,
-                    },
-                ],
-            },
-        ),
+        notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:sunflower_glow')),
         'default',
         7,
     );
