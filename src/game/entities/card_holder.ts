@@ -13,7 +13,7 @@ export class CardHolder implements Entity {
 
     readonly boundingBox: [number, number, number, number] = [64, 8, 312, 64];
 
-    readonly cardSize: [number, number] = [49, 64];
+    readonly cardSize: [number, number] = [48, 64];
 
     readonly cards = [
         ...PLANTS_REGISTRY.getAll(),
