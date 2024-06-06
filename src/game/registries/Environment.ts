@@ -16,7 +16,7 @@ ENVIRONMENTS_REGISTRY.add('dodo:sunny', {
     isSunny: true,
     factory: game => new SunnyEnvironment(
         game,
-        (startPosition: [number, number], endPosition: [number, number], duration: number, lifetime: number, sunAmount: number, scene: Scene) => new SunEntity(
+        (startPosition: [number, number], endPosition: [number, number], duration: number, _lifetime: number, sunAmount: number, scene: Scene) => new SunEntity(
             {
                 degreesPerSecond: 90,
                 position: startPosition,
