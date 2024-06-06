@@ -11,7 +11,7 @@ export interface IGUIController extends IDisposable {
     tick: (delta: number) => void
     addOverlay: (overlay: IGUIOverlay) => void
     removeOverlay: (overlay: IGUIOverlay) => void
-    setMenu: (menu: IGUIMenu) => void
+    setMenu: (menu: IGUIMenu | null) => void
 }
 
 export interface IGUIOverlay extends IDisposable {
