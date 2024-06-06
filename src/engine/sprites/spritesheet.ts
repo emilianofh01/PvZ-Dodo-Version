@@ -68,4 +68,22 @@ export class SpriteSheet {
         dest_h ??= group.cell_size[1];
         context.drawImage(this.image, x, y, ...group.cell_size, dest_x - (pivot[0] * dest_w), dest_y - (pivot[1] * dest_h), dest_w, dest_h);
     }
+
+    static defaultGroup: SpriteSheetGroup = {
+        cell_size: [32, 32],
+        grid_size: [1, 1],
+        name: 'default',
+        padding: [0, 0],
+        x: 0,
+        y: 0,
+        frames: 1,
+    };
+    
+    static singleGroup(image: CanvasImageSource | Promise<CanvasImageSource>, group: Partial<SpriteSheetGroup>) {
+        return new SpriteSheet(image, {
+            groups: [
+                { ...this.defaultGroup, ...group },
+            ],
+        });
+    }
 }
