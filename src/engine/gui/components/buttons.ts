@@ -1,4 +1,3 @@
-import { PartialObject } from '$/core/types';
 import Dodo from '../../Dodo';
 import { point2Rect } from '../../core/collision';
 import { MouseEventData } from '../../input/mouse';
@@ -61,6 +60,10 @@ export class AbstractButton<T extends AbstractButtonConfig<any>> implements GUIE
 
 export interface ButtonConfig extends AbstractButtonConfig<Button> {
     buttonFace: SpriteSheet
+    font: string
+    fontSize: number
+    foreground: string
+    text: string
 }
 
 export class Button extends AbstractButton<ButtonConfig> {
@@ -69,6 +72,9 @@ export class Button extends AbstractButton<ButtonConfig> {
         size: [100, 30],
         zIndex: 0,
         onClick: () => {},
+        font: 'pixel',
+        fontSize: 16,
+        foreground: '#000',
         buttonFace: new SpriteSheet(
             ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './button_sprite_sheet.png')),
             {
@@ -112,10 +118,14 @@ export class Button extends AbstractButton<ButtonConfig> {
             sheet.drawImage(renderer.context, 'button', 2, pos[0] + size[0] - group.cell_size[0], pos[1]);
             sheet.drawImage(renderer.context, 'button', 6, pos[0], pos[1] + size[1] - group.cell_size[1]);
             sheet.drawImage(renderer.context, 'button', 8, pos[0] + size[0] - group.cell_size[0], pos[1] + size[1] - group.cell_size[1]);
+            renderer.context.setFont(button.config.font, button.config.fontSize);
+            renderer.context.fillStyle = button.config.foreground;
+            renderer.context.renderText(button.config.position[0] + button.config.size[0] / 2, button.config.position[1] + button.config.size[1] / 2, button.config.text);
         },
+        text: '',
     };
 
-    constructor(dodo: Dodo, config: PartialObject<ButtonConfig>) {
+    constructor(dodo: Dodo, config: Partial<ButtonConfig>) {
         super(dodo, { ...Button.defaultButtonConfig, ...config });
     }
 }
