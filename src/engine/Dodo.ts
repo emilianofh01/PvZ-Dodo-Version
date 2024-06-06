@@ -27,8 +27,11 @@ export default class Dodo {
         return this._currentScene;
     }
 
-    transitionTo(provider: (dodo: Dodo) => IScene) {
+    transitionTo(provider: (dodo: Dodo) => IScene, keepMenu: boolean = false) {
         this._currentScene?.dispose();
+        if (!keepMenu) {
+            this.guiController.setMenu(null);
+        }
         this._currentScene = provider(this);
     }
 
