@@ -8,6 +8,7 @@ import { AbstractPlantEntity } from '../../entities/plant/PlantEntity.ts';
 import SPRITESHEETS_REGISTRY from './SpriteSheets.ts';
 import { notNullOrUndefined } from 'src/utils/Objects.ts';
 import { BoardPieceEntity } from 'src/entities/BoardPieceEntity.ts';
+import { PeaShooter } from 'src/entities/plant/PeaShooter.ts';
 
 export interface PlantFactoryProps {
     position: [number, number]
@@ -42,6 +43,27 @@ PLANTS_REGISTRY.add('dodo:sunflower', {
                 position: props.position,
             },
             (position, sunAmount, constructorScene) => new SunEntity({ degreesPerSecond: 90, position, size: [32, 32], sunAmount }, constructorScene.dodo),
+            scene.dodo,
+        );
+    },
+});
+
+
+PLANTS_REGISTRY.add('dodo:peashooter', {
+    name: 'Peashooter',
+    description: 'Peashooters are your first line of defense. They shoot peas at attacking zombies.',
+    cost: 100,
+    canPlant: REQUIRE_EMPTY,
+    idleAnimation: new SpriteSheetAnimation(
+        notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:peashooter_idle')),
+        'default',
+        10,
+    ),
+    factory(props: PlantFactoryProps, scene: Scene) {
+        return new PeaShooter(
+            {
+                position: props.position,
+            },
             scene.dodo,
         );
     },
