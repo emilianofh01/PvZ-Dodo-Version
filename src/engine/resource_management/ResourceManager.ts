@@ -1,4 +1,4 @@
-import IResourceLoader, { AssetType, IAssetKey } from './IResourceLoader';
+import IResourceLoader, { ASSET_TYPES, AssetKey, AssetType, IAssetKey } from './IResourceLoader';
 
 export default class ResourceManagement implements IResourceLoader {
     private readonly assets_loaded: Map<string, Promise<unknown> | unknown> = new Map();
@@ -28,4 +28,8 @@ export default class ResourceManagement implements IResourceLoader {
         this.assets_loaded.set(asset_key.key, n);
         return n;
     }
+}
+
+export function loadImage(url: string) {
+    return ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, url));
 }
