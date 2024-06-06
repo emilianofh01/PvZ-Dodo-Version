@@ -16,6 +16,7 @@ export interface SunProperties {
     endPosition?: [number, number]
     transitionDutarion?: number
     sunAmount: number
+    lifetime?: number
 }
 
 interface TransitionProps {
@@ -49,11 +50,16 @@ export class SunEntity<T extends SunProperties = SunProperties> implements Entit
 
     readonly zIndex = 0;
 
+    readonly lifetime : number;
+
+    timeElapsed: number = 0;
+
     constructor(props: T, dodo: Dodo) {
         this.properties = props;
         this.rotation = 0;
         this.dodo = dodo;
         this.sunSprite = null;
+        this.lifetime = props.lifetime ?? 5000;
         ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './assets/img/sun.png')).then(e => {
             this.sunSprite = e;
         });
@@ -87,6 +93,11 @@ export class SunEntity<T extends SunProperties = SunProperties> implements Entit
                 this.transitionData = null;
             }
             this._boundingBoxWPivot = [this._boundingBox[0] - this._boundingBox[2] * 0.5, this._boundingBox[1] - this._boundingBox[3] * 0.5, this._boundingBox[2], this._boundingBox[3]];
+            return;
+        }
+        this.timeElapsed += delta;
+        if (this.timeElapsed > this.lifetime) {
+            this.dodo.currentScene?.removeEntity(this);
         }
     }
 
