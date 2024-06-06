@@ -3,6 +3,7 @@ import Renderer from '$/rendering/Renderer.ts';
 import { Scene } from '$/scene/Scene.ts';
 import { PlantEntry, PlantFactoryProps } from '../registries/Plants.ts';
 import { MouseEventData } from '$/input/mouse.ts';
+import { BoardPieceEntity } from 'src/entities/BoardPieceEntity.ts';
 
 export class GameBoard implements Entity {
     readonly zIndex: number = 0;
@@ -15,7 +16,7 @@ export class GameBoard implements Entity {
 
     highlightedCell: [number, number] | null = null;
 
-    readonly gridMap: Map<number | null, Map<number | null, Entity[]>> = new Map();
+    readonly gridMap: Map<number | null, Map<number | null, BoardPieceEntity[]>> = new Map();
 
     readonly scene: Scene;
 
@@ -55,7 +56,7 @@ export class GameBoard implements Entity {
                 ],
             }, scene),
         );
-        const row = this.gridMap.get(cell[0]) ?? new Map<number | null, Entity[]>();
+        const row = this.gridMap.get(cell[0]) ?? new Map<number | null, BoardPieceEntity[]>();
         const arr = row.get(cell[1]) ?? [];
         arr.push(plant);
         if (row.get(cell[1]) == null) {
@@ -67,13 +68,14 @@ export class GameBoard implements Entity {
         return true;
     }
 
-    placePlant(pos: [number, number], plantConstructor: ((props: PlantFactoryProps, scene: Scene) => Entity)) {
-        plantConstructor({
+    placePlant(pos: [number, number], plantConstructor: ((props: PlantFactoryProps, scene: Scene) => BoardPieceEntity)) {
+        const plant = plantConstructor({
             position: [
                 pos[0] * this.cell_size[0] + this.position[0],
-                pos[0] * this.cell_size[1] + this.position[1],
+                pos[1] * this.cell_size[1] + this.position[1],
             ],
         }, this.scene);
+        plant.initBoard(this, pos);
     }
 
     tick(_: number): void {
@@ -87,6 +89,13 @@ export class GameBoard implements Entity {
                 if ((this.highlightedCell == null) || this.highlightedCell[0] != i || this.highlightedCell[1] != j) continue;
                 renderer.context.renderRect('#aaa', this.position[0] + this.cell_size[0] * i, this.position[1] + this.cell_size[1] * j, ...this.cell_size);
             }
+        }
+    }
+
+    disposeEntity(x: number, y: number, entity: BoardPieceEntity): void {
+        const arr = this.gridMap.get(x)?.get(y);
+        if (arr) {
+            this.gridMap.get(x)?.set(y, arr.filter(e => e != entity));
         }
     }
 

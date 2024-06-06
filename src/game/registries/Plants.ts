@@ -1,13 +1,13 @@
 import { Registry } from '$/core/registry';
 import { Scene } from '$/scene/Scene';
 import { SpriteSheetAnimation } from '$/sprites/animatable';
-import Entity from 'src/entities/Entity';
 import { SunEntity } from 'src/entities/SunEntity';
 import { Sunflower } from 'src/entities/plant/Sunflower';
 import { GameBoard } from '../entities/board.ts';
 import { AbstractPlantEntity } from '../../entities/plant/PlantEntity.ts';
 import SPRITESHEETS_REGISTRY from './SpriteSheets.ts';
 import { notNullOrUndefined } from 'src/utils/Objects.ts';
+import { BoardPieceEntity } from 'src/entities/BoardPieceEntity.ts';
 
 export interface PlantFactoryProps {
     position: [number, number]
@@ -19,7 +19,7 @@ export interface PlantEntry {
     idleAnimation: SpriteSheetAnimation
     cost: number
     canPlant?: (pos: [number, number], board: GameBoard) => boolean
-    factory: (props: PlantFactoryProps, scene: Scene) => Entity
+    factory: (props: PlantFactoryProps, scene: Scene) => BoardPieceEntity
 }
 
 const REQUIRE_EMPTY = (pos: [number, number], board: GameBoard) => (board.gridMap.get(pos[0])?.get(pos[1])?.find(e => e instanceof AbstractPlantEntity)) == null;

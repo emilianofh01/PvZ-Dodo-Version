@@ -1,12 +1,12 @@
-import Entity from '../Entity.ts';
 import Renderer from '../../engine/rendering/Renderer.ts';
 import Dodo from '../../engine/Dodo.ts';
+import { BoardPieceEntity } from '../BoardPieceEntity.ts';
 
 export interface PlantProperties {
     cooldown: number
 }
 
-export abstract class AbstractPlantEntity<P extends PlantProperties> implements Entity {
+export abstract class AbstractPlantEntity<P extends PlantProperties> extends BoardPieceEntity {
     abstract get boundingBox(): [number, number, number, number];
     abstract readonly zIndex: number;
 
@@ -17,12 +17,13 @@ export abstract class AbstractPlantEntity<P extends PlantProperties> implements 
     cooldownElapsed: number = 0;
 
     constructor(props: P, dodo: Dodo) {
+        super();
         this.properties = props;
         this.dodo = dodo;
         this.cooldownElapsed = this.properties.cooldown;
     }
 
-    tick(delta: number): void {
+    override tick(delta: number): void {
         if (this.cooldownElapsed > 0) {
             this.cooldownElapsed -= delta;
             return;
