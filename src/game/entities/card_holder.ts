@@ -80,14 +80,14 @@ export class CardHolder implements Entity {
         this.cards.forEach((e, i) => {
             renderer.context.renderRect(i == this.selectedCardIndex ? '#0f0' : '#f00', this.boundingBox[0] + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1], ...this.cardSize);
             renderer.context.renderRect(i == this.selectedCardIndex ? '#0d0' : '#d00', this.boundingBox[0] + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1], this.cardSize[0], this.cardSize[0]);
-            e.idleAnimation.render(renderer, PIVOTS.MID_CENTER, this.boundingBox[0] + this.cardSize[0] / 2, this.boundingBox[1] + this.cardSize[0] / 2);
+            e.idleAnimation.render(renderer, PIVOTS.MID_CENTER, this.boundingBox[0] + this.cardSize[0] / 2 + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1] + this.cardSize[0] / 2);
 
             renderer.context.textAlign = 'center';
             renderer.context.textBaseline = 'bottom';
             renderer.context.fillStyle = '#000';
             renderer.context.font = '16px pixel';
             renderer.context.textRendering = 'geometricPrecision';
-            renderer.context.fillText(e.cost.toFixed(), this.boundingBox[0] + (this.cardSize[0] + 1) / 2, this.boundingBox[1] + this.cardSize[1]);
+            renderer.context.fillText(e.cost.toFixed(), this.boundingBox[0] + (this.cardSize[0] + 1) / 2 + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1] + this.cardSize[1]);
         });
     }
 }
