@@ -16,10 +16,10 @@ interface SpriteSheetData {
     groups: SpriteSheetGroup[]
 }
 
-export class SpriteSheet {
-    private _image: CanvasImageSource | null;
+export class SpriteSheet<T extends SpriteSheetData = SpriteSheetData> {
+    protected _image: CanvasImageSource | null;
 
-    readonly config: SpriteSheetData;
+    readonly config: T;
 
     readonly groups: Map<string, SpriteSheetGroup>;
 
@@ -27,7 +27,7 @@ export class SpriteSheet {
         return this._image;
     }
 
-    constructor(image: CanvasImageSource | Promise<CanvasImageSource>, config: SpriteSheetData) {
+    constructor(image: CanvasImageSource | Promise<CanvasImageSource>, config: T) {
         if (image instanceof Promise) {
             image.then(e => this._image = e);
             this._image = null;
@@ -85,5 +85,46 @@ export class SpriteSheet {
                 { ...this.defaultGroup, ...group },
             ],
         });
+    }
+}
+
+type Color = [number, number, number] | [number, number, number, number];
+
+interface TintedSpriteSheetConfig extends SpriteSheetData {
+    tint: Color
+}
+
+export class TintedSpriteSheet extends SpriteSheet<TintedSpriteSheetConfig> {
+    
+    private _tinted_image: CanvasImageSource | null = null;
+
+    override get image() {
+        return this._tinted_image ?? this.tryGenerateImage();
+    }
+    
+    tryGenerateImage() {
+        if (this._image) {
+            if (this._image instanceof HTMLImageElement) {
+                const w = this._image.width;
+                const h = this._image.height;
+                const canvas = document.createElement('canvas') as HTMLCanvasElement;
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                if (!ctx) return null;
+                ctx.drawImage(this._image, 0, 0);
+                const image = ctx.getImageData(0, 0, w, h);
+                const { data } = image;
+                for (let i = 0; i < data.length; i += 4) {
+                    data[i + 0] *= this.config.tint[0];
+                    data[i + 1] *= this.config.tint[1];
+                    data[i + 2] *= this.config.tint[2];
+                    data[i + 3] *= this.config.tint[3] ?? 1;
+                }
+                ctx.putImageData(image, 0, 0);
+                this._tinted_image = canvas;
+            }
+        }
+        return this._tinted_image;
     }
 }
