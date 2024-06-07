@@ -9,6 +9,7 @@ import SPRITESHEETS_REGISTRY from './SpriteSheets.ts';
 import { notNullOrUndefined } from 'src/utils/Objects.ts';
 import { BoardPieceEntity } from 'src/entities/BoardPieceEntity.ts';
 import { PeaShooter } from 'src/entities/plant/PeaShooter.ts';
+import { LaneType } from './Levels.ts';
 
 export interface PlantFactoryProps {
     position: [number, number]
@@ -23,7 +24,11 @@ export interface PlantEntry {
     factory: (props: PlantFactoryProps, scene: Scene) => BoardPieceEntity<any>
 }
 
-const REQUIRE_EMPTY = (pos: [number, number], board: GameBoard) => (board.gridMap.get(pos[0])?.get(pos[1])?.find(e => e instanceof AbstractPlantEntity)) == null;
+const AND = (a: (pos: [number, number], board: GameBoard) => boolean, b: (pos: [number, number], board: GameBoard) => boolean) => {
+    return (pos: [number, number], board: GameBoard) => a(pos, board) && b(pos, board);
+};
+
+const REQUIRE_EMPTY = (pos: [number, number], board: GameBoard) => (board.getCell(...pos)?.find(e => e instanceof AbstractPlantEntity)) == null;
 
 const PLANTS_REGISTRY = new Registry<PlantEntry>();
 
@@ -31,7 +36,7 @@ PLANTS_REGISTRY.add('dodo:sunflower', {
     name: 'Sunflower',
     description: "Sunflower can't resist bouncing to the beat. Which beat is that? Why, the life-giving jazzy rhythm of the Earth itself, thumping at a frequency only Sunflower can hear.",
     cost: 50,
-    canPlant: REQUIRE_EMPTY,
+    canPlant: AND(REQUIRE_EMPTY, (pos, board) => board.laneTypes[pos[1]] === LaneType.Grass),
     idleAnimation: new SpriteSheetAnimation(
         notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:sunflower_idle')),
         'default',
@@ -53,7 +58,7 @@ PLANTS_REGISTRY.add('dodo:peashooter', {
     name: 'Peashooter',
     description: 'Peashooters are your first line of defense. They shoot peas at attacking zombies.',
     cost: 100,
-    canPlant: REQUIRE_EMPTY,
+    canPlant: AND(REQUIRE_EMPTY, (pos, board) => board.laneTypes[pos[1]] === LaneType.Grass),
     idleAnimation: new SpriteSheetAnimation(
         notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:peashooter_idle')),
         'default',
