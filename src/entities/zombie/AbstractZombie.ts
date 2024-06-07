@@ -44,6 +44,9 @@ export abstract class AbstractZombie<T extends ZombieProps = ZombieProps> extend
     }
 
     tick(delta: number) {
+        if (this.targetedEntity?.dead) {
+            this.targetedEntity = null;
+        }
         if (this.targetedEntity == null) {
             if (!this.checkTarget()) {
                 this.move(delta);
