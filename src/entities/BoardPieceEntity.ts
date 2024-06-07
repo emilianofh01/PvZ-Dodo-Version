@@ -12,9 +12,9 @@ export abstract class BoardPieceEntity<T extends LivingEntityProps> extends Livi
 
     public abstract draw(renderer: Renderer): void;
 
-    private board?: GameBoard;
+    protected board?: GameBoard;
 
-    private boardPosition?: [number, number];
+    protected boardPosition?: [number, number];
 
     protected scene: Scene;
 
