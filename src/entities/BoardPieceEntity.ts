@@ -1,8 +1,8 @@
 import Renderer from '$/rendering/Renderer';
 import { GameBoard } from 'src/game/entities/board';
-import Entity from './Entity';
+import { LivingEntity, LivingEntityProps } from './LivingEntity';
 
-export abstract class BoardPieceEntity implements Entity {
+export abstract class BoardPieceEntity<T extends LivingEntityProps> extends LivingEntity<T> {
     public abstract readonly zIndex: number;
 
     public abstract readonly boundingBox: [number, number, number, number];
@@ -25,6 +25,4 @@ export abstract class BoardPieceEntity implements Entity {
             this.board?.disposeEntity(this.boardPosition[0], this.boardPosition[1], this);
         }
     }
-    
-    
 }

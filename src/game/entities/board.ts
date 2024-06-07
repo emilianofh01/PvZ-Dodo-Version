@@ -16,7 +16,7 @@ export class GameBoard implements Entity {
 
     highlightedCell: [number, number] | null = null;
 
-    readonly gridMap: Map<number | null, Map<number | null, BoardPieceEntity[]>> = new Map();
+    readonly gridMap: Map<number | null, Map<number | null, BoardPieceEntity<any>[]>> = new Map();
 
     readonly scene: Scene;
 
@@ -56,7 +56,7 @@ export class GameBoard implements Entity {
                 ],
             }, scene),
         );
-        const row = this.gridMap.get(cell[0]) ?? new Map<number | null, BoardPieceEntity[]>();
+        const row = this.gridMap.get(cell[0]) ?? new Map<number | null, BoardPieceEntity<any>[]>();
         const arr = row.get(cell[1]) ?? [];
         arr.push(plant);
         if (row.get(cell[1]) == null) {
@@ -68,7 +68,7 @@ export class GameBoard implements Entity {
         return true;
     }
 
-    placePlant(pos: [number, number], plantConstructor: ((props: PlantFactoryProps, scene: Scene) => BoardPieceEntity)) {
+    placePlant(pos: [number, number], plantConstructor: ((props: PlantFactoryProps, scene: Scene) => BoardPieceEntity<any>)) {
         const plant = plantConstructor({
             position: [
                 pos[0] * this.cell_size[0] + this.position[0],
@@ -92,7 +92,7 @@ export class GameBoard implements Entity {
         }
     }
 
-    disposeEntity(x: number, y: number, entity: BoardPieceEntity): void {
+    disposeEntity(x: number, y: number, entity: BoardPieceEntity<any>): void {
         const arr = this.gridMap.get(x)?.get(y);
         if (arr) {
             this.gridMap.get(x)?.set(y, arr.filter(e => e != entity));

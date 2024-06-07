@@ -32,6 +32,7 @@ export class PeaShooter extends AbstractPlantEntity<PlantProperties> {
     constructor(props: PeaShooterProps, dodo: Dodo) {
         super({
             cooldown: 1500,
+            health: 100,
         }, dodo);
         this.boundingBox = [...props.position, 32, 32];
     }

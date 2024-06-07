@@ -23,8 +23,8 @@ export abstract class SunHarvestingPlant<T extends SunHarvestingPlantProperties 
 
     wrapProvider() {
         return (scene: Scene) => this.sunProvider([
-            this.boundingBox[0] + this.boundingBox[2] * this.properties.sunSpawningPoint[0],
-            this.boundingBox[1] + this.boundingBox[3] * this.properties.sunSpawningPoint[1],
-        ], this.properties.sunAmount, scene);
+            this.boundingBox[0] + this.boundingBox[2] * this.props.sunSpawningPoint[0],
+            this.boundingBox[1] + this.boundingBox[3] * this.props.sunSpawningPoint[1],
+        ], this.props.sunAmount, scene);
     }
 }
