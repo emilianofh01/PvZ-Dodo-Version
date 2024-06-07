@@ -48,34 +48,32 @@ export class GameBoard implements Entity {
             return false;
         }
 
-        const plant = this.scene.addEntity(
-            scene => card.factory({
-                position: [
-                    this.position[0] + this.cell_size[0] * cell[0],
-                    this.position[1] + this.cell_size[1] * cell[1],
-                ],
-            }, scene),
-        );
         const row = this.gridMap.get(cell[0]) ?? new Map<number | null, BoardPieceEntity<any>[]>();
         const arr = row.get(cell[1]) ?? [];
-        arr.push(plant);
         if (row.get(cell[1]) == null) {
             row.set(cell[1], arr);
         }
         if (this.gridMap.get(cell[0]) == null) {
             this.gridMap.set(cell[0], row);
         }
+        
+        const plant = this.placePlant(cell, card.factory);
+        arr.push(plant);
         return true;
     }
 
     placePlant(pos: [number, number], plantConstructor: ((props: PlantFactoryProps, scene: Scene) => BoardPieceEntity<any>)) {
-        const plant = plantConstructor({
-            position: [
-                pos[0] * this.cell_size[0] + this.position[0],
-                pos[1] * this.cell_size[1] + this.position[1],
-            ],
-        }, this.scene);
+        const plant = this.scene.addEntity(scene => plantConstructor(
+            {
+                position: [
+                    pos[0] * this.cell_size[0] + this.position[0],
+                    pos[1] * this.cell_size[1] + this.position[1],
+                ],
+            }, 
+            scene,
+        ));
         plant.initBoard(this, pos);
+        return plant;
     }
 
     cellAtPos(x: number, y: number): [number, number] {
@@ -83,6 +81,10 @@ export class GameBoard implements Entity {
             Math.floor((x - this.position[0]) / this.cell_size[0]),
             Math.floor((y - this.position[1]) / this.cell_size[1]),
         ];
+    }
+
+    getCell(xi: number, yi: number): BoardPieceEntity<any>[] | null {
+        return this.gridMap.get(xi)?.get(yi) ?? null;
     }
 
     tick(_: number): void {
