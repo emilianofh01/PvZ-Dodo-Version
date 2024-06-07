@@ -2,6 +2,7 @@ import Renderer from '../../engine/rendering/Renderer.ts';
 import Dodo from '../../engine/Dodo.ts';
 import { BoardPieceEntity } from '../BoardPieceEntity.ts';
 import { LivingEntityProps } from '../LivingEntity.ts';
+import { Scene } from '$/scene/Scene.ts';
 
 export interface PlantProperties extends LivingEntityProps {
     cooldown: number
@@ -9,15 +10,15 @@ export interface PlantProperties extends LivingEntityProps {
 
 export abstract class AbstractPlantEntity<P extends PlantProperties> extends BoardPieceEntity<P> {
     abstract get boundingBox(): [number, number, number, number];
-    abstract readonly zIndex: number;
+    readonly zIndex: number = 5;
 
     protected dodo: Dodo;
 
     cooldownElapsed: number = 0;
 
-    constructor(props: P, dodo: Dodo) {
-        super(props);
-        this.dodo = dodo;
+    constructor(props: P, scene: Scene) {
+        super(scene, props);
+        this.dodo = scene.dodo;
         this.cooldownElapsed = this.props.cooldown;
     }
 
@@ -31,5 +32,4 @@ export abstract class AbstractPlantEntity<P extends PlantProperties> extends Boa
 
     abstract fixedTick(): boolean;
     abstract draw(renderer: Renderer): void;
-    abstract dispose(): void;
 }

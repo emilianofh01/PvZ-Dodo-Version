@@ -1,6 +1,5 @@
 import { AnimationController } from '$/sprites/animation';
 import SPRITESHEETS_REGISTRY from 'src/game/registries/SpriteSheets';
-import Dodo from '../../engine/Dodo';
 import Renderer, { PIVOTS } from '../../engine/rendering/Renderer';
 import { Scene } from '../../engine/scene/Scene';
 import { SpriteSheetAnimation } from '../../engine/sprites/animatable';
@@ -29,15 +28,13 @@ export class Sunflower extends SunHarvestingPlant {
 
     animationController = new AnimationController(this.sunflowerAnim);
 
-    zIndex: number = 0;
-
-    constructor(sunflowerProps: SunflowerProps, sunProvider: ((position: [number, number], sunAmount: number, scene: Scene) => Entity), dodo: Dodo) {
+    constructor(sunflowerProps: SunflowerProps, sunProvider: ((position: [number, number], sunAmount: number, scene: Scene) => Entity), scene: Scene) {
         super(sunProvider, {
             cooldown: 20000,
             sunAmount: 25,
             sunSpawningPoint: [0.65, 0.65],
             health: 100,
-        }, dodo);
+        }, scene);
         this.boundingBox = [...sunflowerProps.position, 32, 32];
     }
 
@@ -62,8 +59,5 @@ export class Sunflower extends SunHarvestingPlant {
 
     draw(renderer: Renderer): void {
         this.animationController.render(renderer, PIVOTS.TOP_LEFT, ...this.boundingBox);
-    }
-
-    dispose(): void {
     }
 }

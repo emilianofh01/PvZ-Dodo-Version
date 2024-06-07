@@ -1,10 +1,10 @@
 import { AnimationController } from '$/sprites/animation';
 import SPRITESHEETS_REGISTRY from 'src/game/registries/SpriteSheets';
-import Dodo from '../../engine/Dodo';
 import Renderer, { PIVOTS } from '../../engine/rendering/Renderer';
 import { SpriteSheetAnimation } from '../../engine/sprites/animatable';
 import { notNullOrUndefined } from 'src/utils/Objects';
 import { AbstractPlantEntity, PlantProperties } from './PlantEntity';
+import { Scene } from '$/scene/Scene';
 
 interface PeaShooterProps {
     position: [number, number]
@@ -27,13 +27,11 @@ export class PeaShooter extends AbstractPlantEntity<PlantProperties> {
 
     animationController = new AnimationController(this.idleAnim);
 
-    zIndex: number = 0;
-
-    constructor(props: PeaShooterProps, dodo: Dodo) {
+    constructor(props: PeaShooterProps, scene: Scene) {
         super({
             cooldown: 1500,
             health: 100,
-        }, dodo);
+        }, scene);
         this.boundingBox = [...props.position, 32, 32];
     }
 
@@ -50,8 +48,5 @@ export class PeaShooter extends AbstractPlantEntity<PlantProperties> {
 
     draw(renderer: Renderer): void {
         this.animationController.render(renderer, PIVOTS.TOP_LEFT, ...this.boundingBox);
-    }
-
-    dispose(): void {
     }
 }

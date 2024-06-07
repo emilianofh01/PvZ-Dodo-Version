@@ -1,6 +1,5 @@
 import { AbstractPlantEntity, PlantProperties } from './PlantEntity.ts';
 import Entity from '../Entity.ts';
-import Dodo from '../../engine/Dodo.ts';
 import { Scene } from '../../engine/scene/Scene.ts';
 
 export interface SunHarvestingPlantProperties extends PlantProperties {
@@ -11,8 +10,8 @@ export interface SunHarvestingPlantProperties extends PlantProperties {
 export abstract class SunHarvestingPlant<T extends SunHarvestingPlantProperties = SunHarvestingPlantProperties> extends AbstractPlantEntity<T> {
     readonly sunProvider: (position: [number, number], sunAmount: number, scene: Scene) => Entity;
 
-    constructor(sunProvider: ((position: [number, number], sunAmount: number, scene: Scene) => Entity), props: T, dodo: Dodo) {
-        super(props, dodo);
+    constructor(sunProvider: ((position: [number, number], sunAmount: number, scene: Scene) => Entity), props: T, scene: Scene) {
+        super(props, scene);
         this.sunProvider = sunProvider;
     }
 
