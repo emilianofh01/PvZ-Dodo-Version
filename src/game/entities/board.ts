@@ -78,6 +78,13 @@ export class GameBoard implements Entity {
         plant.initBoard(this, pos);
     }
 
+    cellAtPos(x: number, y: number): [number, number] {
+        return [
+            Math.floor((x - this.position[0]) / this.cell_size[0]),
+            Math.floor((y - this.position[1]) / this.cell_size[1]),
+        ];
+    }
+
     tick(_: number): void {
 
     }
