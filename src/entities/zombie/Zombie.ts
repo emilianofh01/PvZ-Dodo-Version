@@ -4,6 +4,7 @@ import { AbstractZombie } from './AbstractZombie';
 import { SpriteSheetAnimation } from '$/sprites/animatable';
 import { notNullOrUndefined } from 'src/utils/Objects';
 import SPRITESHEETS_REGISTRY from 'src/game/registries/SpriteSheets';
+import { AbstractPlantEntity } from '../plant/PlantEntity';
 
 export class Zombie extends AbstractZombie {
 
@@ -58,16 +59,23 @@ export class Zombie extends AbstractZombie {
 
     tick(delta: number): void {
         super.tick(delta);
-        this.walkingAnim.animate(delta);
+        if (!this.targetedEntity)
+            this.walkingAnim.animate(delta);
     }
 
     draw(renderer: Renderer): void {
-        renderer.context.renderRect('#f0f', ...this.boundingBox);
-        renderer.context.renderRect('#ff0', ...this.collisionBox);
         this.walkingAnim.render(renderer, PIVOTS.BOT_CENTER, ...this.position, ...this.props.size);
-        renderer.context.renderRect('#0ff', this.detectionPoint[0], this.detectionPoint[1], 1, 1);
     }
     
+    override checkTarget() {
+        const cell = this.board.getCell(...this.board.cellAtPos(...this.detectionPoint));
+        const plant = cell?.find(e => e instanceof AbstractPlantEntity);
+        if (plant) {
+            this.targetedEntity = plant;
+        }
+        return !!plant;
+    }
+
     dispose(): void {
         
     }
