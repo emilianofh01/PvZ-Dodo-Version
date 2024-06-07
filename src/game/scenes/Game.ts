@@ -33,6 +33,8 @@ export class Game extends Scene {
         const board = this.gameBoard = this.addEntity(s => new GameBoard(s, level.lanes));
         this.addEntity(scene => this.environment.factory(scene as Game));
         this.addEntity(scene => new CardHolder(scene, board));
+        const spawner = this.addEntity(scene => new Spawner(scene, board, 384));
+        spawner.loadLevel(level);
         this.gameRunning = true;
     }
 
