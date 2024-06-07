@@ -70,7 +70,7 @@ export class Button extends AbstractButton<ButtonConfig> {
     public static defaultButtonConfig: ButtonConfig = {
         position: [0, 0],
         size: [100, 30],
-        zIndex: 0,
+        zIndex: 10,
         onClick: () => {},
         font: 'pixel',
         fontSize: 16,

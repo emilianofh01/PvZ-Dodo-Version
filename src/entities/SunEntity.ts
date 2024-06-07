@@ -48,7 +48,7 @@ export class SunEntity<T extends SunProperties = SunProperties> implements Entit
         return this._boundingBox;
     }
 
-    readonly zIndex = 0;
+    readonly zIndex = 50;
 
     readonly lifetime : number;
 
@@ -59,7 +59,7 @@ export class SunEntity<T extends SunProperties = SunProperties> implements Entit
         this.rotation = 0;
         this.dodo = dodo;
         this.sunSprite = null;
-        this.lifetime = props.lifetime ?? 5000;
+        this.lifetime = props.lifetime ?? 10000;
         ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './assets/img/sun.png')).then(e => {
             this.sunSprite = e;
         });
