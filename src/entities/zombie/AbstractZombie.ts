@@ -19,7 +19,7 @@ interface ZombieProps extends LivingEntityProps {
 }
 
 export abstract class AbstractZombie<T extends ZombieProps = ZombieProps> extends LivingEntity<T> {
-    readonly zIndex: number = 1;
+    readonly zIndex: number = 10;
     
     abstract readonly boundingBox: [number, number, number, number];
 
