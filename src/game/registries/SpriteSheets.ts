@@ -24,4 +24,9 @@ SPRITESHEETS_REGISTRY.add(
     SpriteSheet.singleGroup(loadImage('./assets/img/peashooter_shooting.png'), { grid_size: [3, 3], frames: 9 }),
 );
 
+SPRITESHEETS_REGISTRY.add(
+    'dodo:zombie_walking',
+    SpriteSheet.singleGroup(loadImage('./assets/img/zombie_walking.png'), { grid_size: [3, 3], frames: 8 }),
+);
+
 export default SPRITESHEETS_REGISTRY;
