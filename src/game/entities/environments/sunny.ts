@@ -43,7 +43,7 @@ export class SunnyEnvironment implements Entity {
     }
 
     generateNextSun() {
-        this.nextSun += randomFloat(5000, 8000);
+        this.nextSun += randomFloat(5000, 10000);
     }
 
     draw(_: Renderer): void { }
