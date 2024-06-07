@@ -1,6 +1,7 @@
 import Renderer from '$/rendering/Renderer';
 import { GameBoard } from 'src/game/entities/board';
 import { LivingEntity, LivingEntityProps } from './LivingEntity';
+import { Scene } from '$/scene/Scene';
 
 export abstract class BoardPieceEntity<T extends LivingEntityProps> extends LivingEntity<T> {
     public abstract readonly zIndex: number;
@@ -15,9 +16,20 @@ export abstract class BoardPieceEntity<T extends LivingEntityProps> extends Livi
 
     private boardPosition?: [number, number];
 
+    protected scene: Scene;
+
+    constructor(scene: Scene, props: T) {
+        super(props);
+        this.scene = scene;
+    }
+
     initBoard(board: GameBoard, position: [ number, number ]) {
         this.board = board;
         this.boardPosition = position;
+    }
+
+    protected onDeath(_damager: LivingEntity<any>, _damageType: string, _amount: number): void {
+        this.scene.removeEntity(this);
     }
 
     dispose() {
