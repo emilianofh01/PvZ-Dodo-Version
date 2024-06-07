@@ -2,8 +2,9 @@ import { IDisposable } from '../core/types.ts';
 import Renderer from '../rendering/Renderer.ts';
 import { MouseEventData } from '../input/mouse.ts';
 import { IGUIMenu } from './controller.ts';
-import { PriorityQueue } from '../core/priority_queue.ts';
 import { MouseMoveEventData } from '../input/mouse_movement.ts';
+import { PriorityQueue } from '@datastructures-js/priority-queue';
+import { queueIterable } from '$/core/priorityQueue.ts';
 
 export interface GUIElement extends IDisposable {
     get zIndex(): number
@@ -19,22 +20,28 @@ export class BasicGUIMenu implements IGUIMenu {
     private readonly components: PriorityQueue<GUIElement>;
 
     constructor() {
-        this.components = new PriorityQueue((a, b) => a.zIndex > b.zIndex);
+        this.components = new PriorityQueue((a, b) => a.zIndex > b.zIndex ? 1 : a.zIndex < b.zIndex ? -1 : 0);
     }
 
-    render(renderer: Renderer): void { this.components.forEach(e => e.render(renderer)); }
+    private forEachComponent(fn: (e: GUIElement) => void) {
+        for (const entity of queueIterable(this.components)) {
+            fn(entity);
+        }
+    }
 
-    tick(delta: number): void { this.components.forEach(e => (e.tick != null) && e.tick(delta)); }
+    render(renderer: Renderer): void { this.forEachComponent(e => e.render(renderer)); }
 
-    mouseMove?(event: MouseMoveEventData): void { this.components.forEach(e => (e.mouseMove != null) && e.mouseMove(event)); }
+    tick(delta: number): void { this.forEachComponent(e => (e.tick != null) && e.tick(delta)); }
 
-    mouseDown?(event: MouseEventData): void { this.components.forEach(e => (e.mouseDown != null) && e.mouseDown(event)); }
+    mouseMove?(event: MouseMoveEventData): void { this.forEachComponent(e => (e.mouseMove != null) && e.mouseMove(event)); }
 
-    mouseUp?(event: MouseEventData): void { this.components.forEach(e => (e.mouseUp != null) && e.mouseUp(event)); }
+    mouseDown?(event: MouseEventData): void { this.forEachComponent(e => (e.mouseDown != null) && e.mouseDown(event)); }
 
-    click?(event: MouseEventData): void { this.components.forEach(e => (e.click != null) && e.click(event)); }
+    mouseUp?(event: MouseEventData): void { this.forEachComponent(e => (e.mouseUp != null) && e.mouseUp(event)); }
 
-    dispose(): void { this.components.forEach(e => e.dispose()); }
+    click?(event: MouseEventData): void { this.forEachComponent(e => (e.click != null) && e.click(event)); }
 
-    addComponent(element: GUIElement) { this.components.push(element); }
+    dispose(): void { this.forEachComponent(e => e.dispose()); }
+
+    addComponent(element: GUIElement) { this.components.push(element); this.forEachComponent(e => console.log(e)); console.log(this.components.size()); }
 }

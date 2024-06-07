@@ -4,21 +4,23 @@ import IScene from './IScene';
 import ResourceManagement from '../resource_management/ResourceManager';
 import { ASSET_TYPES, AssetKey } from '../resource_management/IResourceLoader';
 import Entity from '../../entities/Entity';
+import { PriorityQueue } from '@datastructures-js/priority-queue';
+import { queueIterable } from '$/core/priorityQueue';
 
 export class Scene implements IScene {
     dodo: Dodo;
 
-    entities: Entity[];
+    entities: PriorityQueue<Entity>;
 
     public readonly fill: BackdropFill = '#070';
 
     constructor(dodo: Dodo) {
         this.dodo = dodo;
-        this.entities = [];
+        this.entities = new PriorityQueue<Entity>((a, b) => a.zIndex > b.zIndex ? 1 : a.zIndex < b.zIndex ? -1 : 0);
     }
 
     dispose(): void {
-        this.entities.forEach(e => e.dispose());
+        this.entities.toArray().forEach(e => e.dispose());
     }
 
     async preload(): Promise<void> {
@@ -33,14 +35,18 @@ export class Scene implements IScene {
 
     removeEntity(entity: Entity) {
         entity.dispose();
-        this.entities = this.entities.filter(e => e != entity);
+        this.entities.remove(e => e == entity);
     }
 
     update(delta: number): void {
-        this.entities.forEach(e => e.tick(delta));
+        for (const entity of queueIterable(this.entities)) {
+            entity.tick(delta);
+        }
     }
 
     render(renderer: Renderer): void {
-        this.entities.forEach(e => e.draw(renderer));
+        for (const entity of queueIterable(this.entities)) {
+            entity.draw(renderer);
+        }
     }
 }
