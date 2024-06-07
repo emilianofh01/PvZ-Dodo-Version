@@ -20,7 +20,7 @@ export interface PlantEntry {
     idleAnimation: SpriteSheetAnimation
     cost: number
     canPlant?: (pos: [number, number], board: GameBoard) => boolean
-    factory: (props: PlantFactoryProps, scene: Scene) => BoardPieceEntity
+    factory: (props: PlantFactoryProps, scene: Scene) => BoardPieceEntity<any>
 }
 
 const REQUIRE_EMPTY = (pos: [number, number], board: GameBoard) => (board.gridMap.get(pos[0])?.get(pos[1])?.find(e => e instanceof AbstractPlantEntity)) == null;
@@ -43,7 +43,7 @@ PLANTS_REGISTRY.add('dodo:sunflower', {
                 position: props.position,
             },
             (position, sunAmount, constructorScene) => new SunEntity({ degreesPerSecond: 90, position, size: [32, 32], sunAmount }, constructorScene.dodo),
-            scene.dodo,
+            scene,
         );
     },
 });
@@ -64,7 +64,7 @@ PLANTS_REGISTRY.add('dodo:peashooter', {
             {
                 position: props.position,
             },
-            scene.dodo,
+            scene,
         );
     },
 });
