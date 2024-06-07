@@ -5,6 +5,8 @@ import { SpriteSheetAnimation } from '$/sprites/animatable';
 import { notNullOrUndefined } from 'src/utils/Objects';
 import SPRITESHEETS_REGISTRY from 'src/game/registries/SpriteSheets';
 import { AbstractPlantEntity } from '../plant/PlantEntity';
+import { LivingEntity } from '../LivingEntity';
+import { Scene } from '$/scene/Scene';
 
 export class Zombie extends AbstractZombie {
 
@@ -35,8 +37,9 @@ export class Zombie extends AbstractZombie {
         return [this.props.detectionPoint[0] + this.position[0], this.props.detectionPoint[1] + this.position[1]];
     }
 
-    constructor(board: GameBoard, startPos: [number, number], lane: number) {
+    constructor(scene: Scene, board: GameBoard, startPos: [number, number], lane: number) {
         super(
+            scene,
             board, 
             {
                 biteCooldown: 500,
@@ -66,18 +69,30 @@ export class Zombie extends AbstractZombie {
     draw(renderer: Renderer): void {
         this.walkingAnim.render(renderer, PIVOTS.BOT_CENTER, ...this.position, ...this.props.size);
     }
+
+    protected onDeath(_damager: LivingEntity<any>, _damageType: string, _amount: number): void {
+        this.scene.removeEntity(this);
+    }
     
+    hasEnteredTheHouse() {
+        const pos = this.board.cellAtPos(...this.detectionPoint);
+        if (pos[0] < 0) {
+            return true;
+        }
+        return false;
+    }
+
     override checkTarget() {
-        const cell = this.board.getCell(...this.board.cellAtPos(...this.detectionPoint));
+        const pos = this.board.cellAtPos(...this.detectionPoint);
+        if (pos[0] < 0) {
+            return false;
+        }
+        const cell = this.board.getCell(...pos);
         const plant = cell?.find(e => e instanceof AbstractPlantEntity);
         if (plant) {
             this.targetedEntity = plant;
         }
         return !!plant;
-    }
-
-    dispose(): void {
-        
     }
 
 }

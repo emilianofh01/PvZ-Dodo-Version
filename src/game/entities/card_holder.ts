@@ -68,7 +68,7 @@ export class CardHolder implements Entity {
         if (this.selectedCardIndex < 0) return;
         if (!point2Rect(event.position, this.board.boundingBox)) return;
         const mousePos = event.position.map((e, i) => e - this.board.boundingBox[i]) as [number, number];
-        this.board.mousePosUpdate(mousePos);
+        this.board.mousePosUpdate(mousePos, this.cards[this.selectedCardIndex]);
     };
 
     tick(delta: number): void {

@@ -29,4 +29,13 @@ SPRITESHEETS_REGISTRY.add(
     SpriteSheet.singleGroup(loadImage('./assets/img/zombie_walking.png'), { grid_size: [3, 3], frames: 8 }),
 );
 
+SPRITESHEETS_REGISTRY.add(
+    'dodo:pea',
+    SpriteSheet.singleGroup(loadImage('./assets/img/pea.png'), { grid_size: [1, 1], frames: 1 }),
+);
+
+SPRITESHEETS_REGISTRY.add(
+    'dodo:grass',
+    SpriteSheet.singleGroup(loadImage('./assets/img/grass.png'), { grid_size: [2, 1], frames: 2 }),
+);
 export default SPRITESHEETS_REGISTRY;

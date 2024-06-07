@@ -1,6 +1,8 @@
 import Renderer from '$/rendering/Renderer';
 import { GameBoard } from 'src/game/entities/board';
 import { LivingEntity, LivingEntityProps } from '../LivingEntity';
+import { Scene } from '$/scene/Scene';
+import { Game } from 'src/game/scenes/Game';
 
 interface Box {
     offset_x: number
@@ -20,6 +22,8 @@ interface ZombieProps extends LivingEntityProps {
 
 export abstract class AbstractZombie<T extends ZombieProps = ZombieProps> extends LivingEntity<T> {
     readonly zIndex: number = 10;
+
+    abstract readonly collisionBox: [number, number, number, number];
     
     abstract readonly boundingBox: [number, number, number, number];
 
@@ -35,17 +39,27 @@ export abstract class AbstractZombie<T extends ZombieProps = ZombieProps> extend
     
     protected lane: number;
 
-    constructor(board: GameBoard, props: T, startPos: [ number, number ], lane: number) {
+    protected scene: Scene;
+
+    constructor(scene: Scene, board: GameBoard, props: T, startPos: [ number, number ], lane: number) {
         super(props);
+        this.scene = scene;
         this.board = board;
         this.position = [ ...startPos ];
         this.floatPos = [ ...startPos ];
         this.lane = lane;
+        board.addEntityToLane(lane, this);
     }
 
     tick(delta: number) {
+        if (this.scene instanceof Game && !this.scene.gameRunning) {
+            return;
+        }
         if (this.targetedEntity?.dead) {
             this.targetedEntity = null;
+        }
+        if (this.hasEnteredTheHouse() && this.scene instanceof Game) {
+            this.scene.gameLost();
         }
         if (this.targetedEntity == null) {
             if (!this.checkTarget()) {
@@ -62,9 +76,12 @@ export abstract class AbstractZombie<T extends ZombieProps = ZombieProps> extend
             this.biteTimeElapsed %= this.props.biteCooldown;
         }
     }
+
+    hasEnteredTheHouse(): boolean {
+        return false;
+    }
     
     checkTarget(): boolean {
-        /// TODO: check the next cell to see if there are plants there
         return false;
     }
 
@@ -73,8 +90,10 @@ export abstract class AbstractZombie<T extends ZombieProps = ZombieProps> extend
         this.position[0] = Math.ceil(this.floatPos[0]);
     }
 
+    dispose(): void {
+        this.board.removeEntityFromLane(this.lane, this);
+    }
+
     abstract draw(renderer: Renderer): void;
-    
-    abstract dispose(): void;
 
 }

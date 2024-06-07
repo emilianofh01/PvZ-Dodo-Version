@@ -4,6 +4,10 @@ import { Scene } from '$/scene/Scene.ts';
 import { PlantEntry, PlantFactoryProps } from '../registries/Plants.ts';
 import { MouseEventData } from '$/input/mouse.ts';
 import { BoardPieceEntity } from 'src/entities/BoardPieceEntity.ts';
+import { LaneType } from '../registries/Levels.ts';
+import { SpriteSheet } from '$/sprites/spritesheet.ts';
+import { notNullOrUndefined } from 'src/utils/Objects.ts';
+import SPRITESHEETS_REGISTRY from '../registries/SpriteSheets.ts';
 
 export class GameBoard implements Entity {
     readonly zIndex: number = 0;
@@ -16,26 +20,36 @@ export class GameBoard implements Entity {
 
     highlightedCell: [number, number] | null = null;
 
-    readonly gridMap: Map<number | null, Map<number | null, BoardPieceEntity<any>[]>> = new Map();
+    selectedPlant: PlantEntry | null = null;
+
+    private readonly gridMap: Map<number | null, Map<number | null, BoardPieceEntity<any>[]>> = new Map();
+
+    readonly laneEntities: Map<number, Entity[]> = new Map();
 
     readonly scene: Scene;
+
+    readonly spriteSheet: SpriteSheet = notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:grass'));
+
+    readonly laneTypes: LaneType[];
 
     get boundingBox(): [number, number, number, number] {
         return [...this.position, this.cell_size[0] * this.board_size[0], this.cell_size[0] * this.board_size[0]];
     }
 
-    constructor(scene: Scene) {
+    constructor(scene: Scene, laneTypes: LaneType[]) {
         this.cell_size = [32, 32];
-        this.board_size = [12, 5];
+        this.board_size = [12, laneTypes.length];
+        this.laneTypes = laneTypes;
         this.position = [0, 80];
         this.scene = scene;
     }
 
-    mousePosUpdate(pos: [number, number]) {
+    mousePosUpdate(pos: [number, number], selectedPlant: PlantEntry) {
         this.highlightedCell = [
             Math.floor(pos[0] / this.cell_size[0]),
             Math.floor(pos[1] / this.cell_size[1]),
         ];
+        this.selectedPlant = selectedPlant;
     }
 
     takeAction(event: MouseEventData, card: PlantEntry): boolean {
@@ -87,6 +101,22 @@ export class GameBoard implements Entity {
         return this.gridMap.get(xi)?.get(yi) ?? null;
     }
 
+    addEntityToLane(lane: number, entity: Entity) {
+        if (this.laneEntities.has(lane))
+            this.laneEntities.get(lane)?.push(entity);
+        else 
+            this.laneEntities.set(lane, [entity]);
+    }
+
+    removeEntityFromLane(lane: number, entity: Entity) {
+        const n = this.laneEntities.get(lane) ?? [];
+        this.laneEntities.set(lane, n.filter(e => e != entity));
+    }
+
+    getEntitiesOfLane(lane: number) {
+        return this.laneEntities.get(lane) ?? [];
+    }
+
     tick(_: number): void {
 
     }
@@ -94,9 +124,14 @@ export class GameBoard implements Entity {
     draw(renderer: Renderer): void {
         for (let i = 0; i < this.board_size[0]; i++) {
             for (let j = 0; j < this.board_size[1]; j++) {
-                renderer.context.renderRect((i + j) % 2 ? '#000' : '#fff', this.position[0] + this.cell_size[0] * i, this.position[1] + this.cell_size[1] * j, ...this.cell_size);
+                const variant = (i + j) % 2;                
+                this.spriteSheet.drawImage(renderer.context, 'default', variant, this.position[0] + this.cell_size[0] * i, this.position[1] + this.cell_size[1] * j);
+                if (this.laneTypes[j] == LaneType.Ground) {
+                    renderer.context.renderRect('#865439', this.position[0] + this.cell_size[0] * i, this.position[1] + this.cell_size[1] * j, ...this.cell_size);
+                }
                 if ((this.highlightedCell == null) || this.highlightedCell[0] != i || this.highlightedCell[1] != j) continue;
-                renderer.context.renderRect('#aaa', this.position[0] + this.cell_size[0] * i, this.position[1] + this.cell_size[1] * j, ...this.cell_size);
+                if (this.selectedPlant && (!this.selectedPlant.canPlant || this.selectedPlant.canPlant(this.highlightedCell, this)))
+                    renderer.context.renderRect('#0002', this.position[0] + this.cell_size[0] * i, this.position[1] + this.cell_size[1] * j, ...this.cell_size);
             }
         }
     }
