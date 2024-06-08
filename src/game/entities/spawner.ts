@@ -48,7 +48,7 @@ export class Spawner implements Entity {
                 this.scene.addEntity(scene => e.zombie.factory({
                     gameBoard: this.board,
                     lane,
-                    position
+                    position,
                 }, scene));
             }
         }
