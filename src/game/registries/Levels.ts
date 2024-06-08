@@ -1,17 +1,16 @@
-import Entity from 'src/entities/Entity';
 import { Registry } from '$/core/registry';
 import { Scene } from '$/scene/Scene';
-import { GameBoard } from '../entities/board';
-import { Zombie } from 'src/entities/zombie/Zombie';
+import ZOMBIES_REGISTRY, { ZombieEntry } from './Zombies';
+import { notNullOrUndefined } from 'src/utils/Objects';
 
 export interface ZombieGeneration {
-    generate: (pos: [number, number], scene: Scene, gameBoard: GameBoard, lane: number) => Entity;
+    zombie: ZombieEntry;
     selectLane: (scene: Scene) => number;
 }
 
 export interface Wave {
     time: number
-    zombiesToGenerate: ZombieGeneration[]
+    batch: ZombieGeneration[]
 }
 
 export interface Level {
@@ -38,27 +37,27 @@ LEVELS_REGISTRY.add('dodo:level_1-1', {
     waves: [
         {
             time: 30000,
-            zombiesToGenerate: [
-                { selectLane: () => 2, generate: (pos: [number, number], scene: Scene, gameBoard: GameBoard, lane: number) => new Zombie(scene, gameBoard, pos, lane) },
+            batch: [
+                { selectLane: () => 2, zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
             ],
         },
         {
             time: 40000,
-            zombiesToGenerate: [
-                { selectLane: () => 2, generate: (pos: [number, number], scene: Scene, gameBoard: GameBoard, lane: number) => new Zombie(scene, gameBoard, pos, lane) },
+            batch: [
+                { selectLane: () => 2, zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
             ],
         },
         {
             time: 50000,
-            zombiesToGenerate: [
-                { selectLane: () => 2, generate: (pos: [number, number], scene: Scene, gameBoard: GameBoard, lane: number) => new Zombie(scene, gameBoard, pos, lane) },
+            batch: [
+                { selectLane: () => 2, zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
             ],
         },
         {
             time: 65000,
-            zombiesToGenerate: [
-                { selectLane: () => 2, generate: (pos: [number, number], scene: Scene, gameBoard: GameBoard, lane: number) => new Zombie(scene, gameBoard, pos, lane) },
-                { selectLane: () => 2, generate: (pos: [number, number], scene: Scene, gameBoard: GameBoard, lane: number) => new Zombie(scene, gameBoard, pos, lane) },
+            batch: [
+                { selectLane: () => 2, zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
+                { selectLane: () => 2, zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
             ],
         },
     ],

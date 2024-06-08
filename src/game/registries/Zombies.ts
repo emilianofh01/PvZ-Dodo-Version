@@ -34,3 +34,5 @@ ZOMBIES_REGISTRY.add('dodo:zombie', {
         3,
     ),
 });
+
+export  default ZOMBIES_REGISTRY;

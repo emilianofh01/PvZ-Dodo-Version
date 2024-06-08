@@ -41,11 +41,15 @@ export class Spawner implements Entity {
         let x = this.start_x;
         while (this.wavesQueue.front() && this.wavesQueue.front().time <= this.time) {
             const wave = this.wavesQueue.dequeue();
-            for (const e of wave.zombiesToGenerate) {
+            for (const e of wave.batch) {
                 const lane = e.selectLane(this.scene);
-                const pos: [number, number] = [x, this.board.position[1] + this.board.cell_size[1] * (lane + 1)];
+                const position: [number, number] = [x, this.board.position[1] + this.board.cell_size[1] * (lane + 1)];
                 x += this.level!.spacing;
-                this.scene.addEntity(scene => e.generate(pos, scene, this.board, lane));
+                this.scene.addEntity(scene => e.zombie.factory({
+                    gameBoard: this.board,
+                    lane,
+                    position
+                }, scene));
             }
         }
         this.time += delta;
