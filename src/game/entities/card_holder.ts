@@ -1,6 +1,6 @@
 import Renderer, { PIVOTS } from '$/rendering/Renderer';
 import Entity from 'src/entities/Entity';
-import PLANTS_REGISTRY from '../registries/Plants';
+import { PlantEntry } from '../registries/Plants';
 import { GameBoard } from './board.ts';
 import { Scene } from '$/scene/Scene.ts';
 import { MOUSE_MOVE, MouseMoveEventData } from '$/input/mouse_movement.ts';
@@ -15,9 +15,7 @@ export class CardHolder implements Entity {
 
     readonly cardSize: [number, number] = [48, 64];
 
-    readonly cards = [
-        ...PLANTS_REGISTRY.getAll(),
-    ];
+    readonly cards;
 
     readonly cardPadding = 8;
 
@@ -27,11 +25,12 @@ export class CardHolder implements Entity {
 
     selectedCardIndex: number = -1;
 
-    constructor(scene: Scene, board: GameBoard) {
+    constructor(scene: Scene, board: GameBoard, cards: PlantEntry[]) {
         this.board = board;
         this.scene = scene;
         this.scene.dodo.listener_manager.addEventListener(MOUSE_MOVE, this.mouseMove);
         this.scene.dodo.listener_manager.addEventListener(MOUSE, this.mouseDown);
+        this.cards = cards;
     }
 
     dispose(): void {
