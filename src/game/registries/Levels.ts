@@ -1,5 +1,6 @@
 import { Registry } from '$/core/registry';
 import { Scene } from '$/scene/Scene';
+import PLANTS_REGISTRY, { PlantEntry } from './Plants';
 import ZOMBIES_REGISTRY, { ZombieEntry } from './Zombies';
 import { notNullOrUndefined } from 'src/utils/Objects';
 
@@ -14,8 +15,10 @@ export interface Wave {
 }
 
 export interface Level {
-    spacing: number;
-    lanes: LaneType[];
+    startingSuns: number
+    fixedSeeds: PlantEntry[]
+    spacing: number
+    lanes: LaneType[]
     waves: Wave[]
 }
 
@@ -26,6 +29,10 @@ export enum LaneType {
 
 export const LEVELS_REGISTRY = new Registry<Level>();
 LEVELS_REGISTRY.add('dodo:level_1-1', {
+    startingSuns: 150,
+    fixedSeeds: [
+        notNullOrUndefined(PLANTS_REGISTRY.get('dodo:peashooter')),
+    ],
     spacing: 10,
     lanes: [
         LaneType.Ground,

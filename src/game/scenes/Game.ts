@@ -33,9 +33,10 @@ export class Game extends Scene {
         const level = notNullOrUndefined(LEVELS_REGISTRY.get('dodo:level_1-1'));
         const board = this.gameBoard = this.addEntity(s => new GameBoard(s, level.lanes));
         this.addEntity(scene => this.environment.factory(scene as Game));
-        this.addEntity(scene => new CardHolder(scene, board, [ ...PLANTS_REGISTRY.getAll() ]));
+        this.addEntity(scene => new CardHolder(scene, board, level.fixedSeeds ?? [ ...PLANTS_REGISTRY.getAll() ]));
         const spawner = this.addEntity(scene => new Spawner(scene, board, 384));
         spawner.loadLevel(level);
+        this.currentSun = level.startingSuns;
         this.gameRunning = true;
     }
 
