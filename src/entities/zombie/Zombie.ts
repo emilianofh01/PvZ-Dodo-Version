@@ -46,7 +46,7 @@ export class Zombie extends AbstractZombie {
                 damage: 20,
                 health: 200,
                 size: [ 32, 32 ],
-                speed: 5,
+                speed: 6,
                 collisionBox: {
                     width: 16,
                     height: 28,
