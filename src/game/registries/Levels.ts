@@ -234,7 +234,7 @@ LEVELS_REGISTRY.add('dodo:level_1-3', {
     fixedSeeds: [
         notNullOrUndefined(PLANTS_REGISTRY.get('dodo:peashooter')),
         notNullOrUndefined(PLANTS_REGISTRY.get('dodo:sunflower')),
-        notNullOrUndefined(PLANTS_REGISTRY.get('dodo:cherry_bomb')),
+        notNullOrUndefined(PLANTS_REGISTRY.get('dodo:wall_nut')),
     ],
     startLevelConditions: [
     ],
@@ -268,13 +268,13 @@ LEVELS_REGISTRY.add('dodo:level_1-3', {
         {
             time: 90000,
             batch: [
-                { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie_cone')) },
+                { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:cone_zombie')) },
             ],
         },
         {
             time: 120000,
             batch: [
-                { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie_cone')) },
+                { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:cone_zombie')) },
             ],
         },
         {
@@ -287,7 +287,7 @@ LEVELS_REGISTRY.add('dodo:level_1-3', {
         {
             time: 180000,
             batch: [
-                { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie_cone')) },
+                { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:cone_zombie')) },
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
             ],
         },
@@ -297,7 +297,7 @@ LEVELS_REGISTRY.add('dodo:level_1-3', {
             batch: [
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
-                { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie_cone')) },
+                { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:cone_zombie')) },
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
             ],
@@ -310,8 +310,8 @@ LEVELS_REGISTRY.add('dodo:level_1-4', {
     fixedSeeds: [
         notNullOrUndefined(PLANTS_REGISTRY.get('dodo:peashooter')),
         notNullOrUndefined(PLANTS_REGISTRY.get('dodo:sunflower')),
-        notNullOrUndefined(PLANTS_REGISTRY.get('dodo:cherry_bomb')),
         notNullOrUndefined(PLANTS_REGISTRY.get('dodo:wall_nut')),
+        notNullOrUndefined(PLANTS_REGISTRY.get('dodo:cherry_bomb')),
     ],
     startLevelConditions: [
     ],
@@ -395,10 +395,10 @@ LEVELS_REGISTRY.add('dodo:level_1-4', {
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
-                { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie_cone')) },
+                { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:cone_zombie')) },
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
-                { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie_cone')) },
+                { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:cone_zombie')) },
             ],
         },
     ],

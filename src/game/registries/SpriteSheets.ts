@@ -30,6 +30,11 @@ SPRITESHEETS_REGISTRY.add(
 );
 
 SPRITESHEETS_REGISTRY.add(
+    'dodo:cone_zombie_walking',
+    SpriteSheet.singleGroup(loadImage('./assets/img/entities/zombies/cone_zombie_walking.png'), { grid_size: [3, 3], frames: 8 }),
+);
+
+SPRITESHEETS_REGISTRY.add(
     'dodo:pea',
     SpriteSheet.singleGroup(loadImage('./assets/img/entities/projectiles/pea.png'), { grid_size: [1, 1], frames: 1 }),
 );

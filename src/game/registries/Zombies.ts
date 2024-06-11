@@ -6,6 +6,7 @@ import { Registry } from '$/core/registry';
 import { Zombie } from 'src/entities/zombie/Zombie';
 import { notNullOrUndefined } from 'src/utils/Objects';
 import SPRITESHEETS_REGISTRY from './SpriteSheets';
+import { ConeZombie } from 'src/entities/zombie/ConeZombie';
 
 export interface ZombieFactoryProps {
     position: [number, number]
@@ -30,6 +31,19 @@ ZOMBIES_REGISTRY.add('dodo:zombie', {
     },
     idleAnimation: new SpriteSheetAnimation(
         notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:zombie_walking')),
+        'default',
+        3,
+    ),
+});
+
+ZOMBIES_REGISTRY.add('dodo:cone_zombie', {
+    name: 'Cone Zombie',
+    description: "Conehead Zombie shuffled mindlessly forward like every other zombie. But something made him stop, made him pick up a traffic cone and stick it on his head. Oh yeah. He likes to party.",
+    factory(props, scene) {
+        return new ConeZombie(scene, props.gameBoard, props.position, props.lane);
+    },
+    idleAnimation: new SpriteSheetAnimation(
+        notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:cone_zombie_walking')),
         'default',
         3,
     ),
