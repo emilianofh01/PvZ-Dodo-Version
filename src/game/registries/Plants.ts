@@ -10,6 +10,7 @@ import { BoardPieceEntity } from 'src/entities/BoardPieceEntity.ts';
 import { PeaShooter } from 'src/entities/plant/PeaShooter.ts';
 import { LaneType } from './Levels.ts';
 import { SpriteSheet } from '$/sprites/spritesheet.ts';
+import { WallNut } from 'src/entities/plant/WallNut.ts';
 
 export interface PlantFactoryProps {
     position: [number, number]
@@ -75,6 +76,28 @@ PLANTS_REGISTRY.add('dodo:peashooter', {
     },
     factory(props: PlantFactoryProps, scene: Scene) {
         return new PeaShooter(
+            {
+                position: props.position,
+            },
+            scene,
+        );
+    },
+});
+
+
+PLANTS_REGISTRY.add('dodo:wall_nut', {
+    name: 'Wallnut',
+    description: 'Wall-nuts have hard shells which you can use to protect your other plants.',
+    cost: 50,
+    cooldown: 16000,
+    canPlant: AND(REQUIRE_EMPTY, (pos, board) => board.laneTypes[pos[1]] === LaneType.Grass),
+    idleAnimation: {
+        sheet: notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:wall_nut')),
+        group: 'default',
+        fps: 10,
+    },
+    factory(props: PlantFactoryProps, scene: Scene) {
+        return new WallNut(
             {
                 position: props.position,
             },
