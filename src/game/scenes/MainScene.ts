@@ -4,10 +4,12 @@ import { BasicGUIMenu } from '$/gui/elements';
 import { loadImage } from '$/resource_management/ResourceManager';
 import { Scene } from '$/scene/Scene';
 import { TintedSpriteSheet } from '$/sprites/spritesheet';
-import { Game } from './Game';
+import { notNullOrUndefined } from 'src/utils/Objects';
+import { PlantsVsZombies } from '../game';
+import WORLDS_REGISTRY from '../registries/Worlds';
 
 class MainMenu extends BasicGUIMenu {
-    constructor(dodo: Dodo) {
+    constructor(dodo: Dodo, game: PlantsVsZombies) {
         super();
         this.addComponent(new Button(
             dodo, 
@@ -31,17 +33,44 @@ class MainMenu extends BasicGUIMenu {
                     },
                 ),
                 onClick: () => {
-                    dodo.transitionTo(() => new Game(dodo));
+                    game.loadLevel(notNullOrUndefined(WORLDS_REGISTRY.get('dodo:day')), 0);
                 },
                 text: 'Play',
+            },
+        ));
+        this.addComponent(new Button(
+            dodo, 
+            {
+                position: [105, 136],
+                size: [174, 20],
+                buttonFace: new TintedSpriteSheet(
+                    loadImage('./button_sprite_sheet.png'),
+                    {
+                        groups: [
+                            {
+                                x: 0,
+                                y: 0,
+                                grid_size: [3, 3],
+                                cell_size: [8, 8],
+                                name: 'button',
+                                padding: [0, 0],
+                            },
+                        ],
+                        tint: [1, 1, 1],
+                    },
+                ),
+                onClick: () => {
+                    window.close();
+                },
+                text: 'Exit',
             },
         ));
     }
 }
 
 export default class MainScene extends Scene {
-    constructor(dodo: Dodo) {
+    constructor(dodo: Dodo, game: PlantsVsZombies) {
         super(dodo);
-        dodo.guiController.setMenu(new MainMenu(dodo));
+        dodo.guiController.setMenu(new MainMenu(dodo, game));
     }
 }

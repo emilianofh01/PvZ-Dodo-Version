@@ -16,6 +16,7 @@ import MainScene from './MainScene.ts';
 import PLANTS_REGISTRY from '../registries/Plants.ts';
 import { Reward } from '../entities/reward.ts';
 import { AbstractZombie } from 'src/entities/zombie/AbstractZombie.ts';
+import { PlantsVsZombies } from '../game.ts';
 
 
 export class Game extends Scene {
@@ -29,14 +30,17 @@ export class Game extends Scene {
 
     readonly spawner: Spawner;
 
-    static lostMenu: (scene: Scene) => BasicGUIMenu;
+    static lostMenu: (scene: Game) => BasicGUIMenu;
 
     readonly level: Level;
 
-    constructor(dodo: Dodo) {
+    readonly pvz: PlantsVsZombies;
+
+    constructor(dodo: Dodo, level: Level, game: PlantsVsZombies) {
         super(dodo);
+        this.pvz = game;
         this.addEntity(_ => new SunCounter(this.getSun));
-        const level = this.level = notNullOrUndefined(LEVELS_REGISTRY.get('dodo:level_1-1'));
+        this.level = level;
         const board = this.gameBoard = this.addEntity(s => new GameBoard(s, level.lanes));
         this.addEntity(scene => this.environment.factory(scene as Game));
         this.addEntity(scene => new CardHolder(scene as Game, board, level.fixedSeeds ?? [ ...PLANTS_REGISTRY.getAll() ]));
@@ -65,7 +69,7 @@ export class Game extends Scene {
 }
 
 export class LostGameMenu extends BasicGUIMenu {
-    constructor(scene: Scene) {
+    constructor(scene: Game) {
         super();
         this.addComponent({
             zIndex: 0,
@@ -101,7 +105,7 @@ export class LostGameMenu extends BasicGUIMenu {
                     },
                 ),
                 onClick: () => {
-                    scene.dodo.transitionTo(() => new Game(scene.dodo));
+                    scene.pvz.restartLevel();
                 },
                 text: 'Restart',
             },
@@ -128,7 +132,7 @@ export class LostGameMenu extends BasicGUIMenu {
                     },
                 ),
                 onClick: () => {
-                    scene.dodo.transitionTo(() => new MainScene(scene.dodo));
+                    scene.dodo.transitionTo(() => new MainScene(scene.dodo, scene.pvz));
                 },
                 text: 'Back to main menu',
             },
@@ -136,4 +140,4 @@ export class LostGameMenu extends BasicGUIMenu {
     }
 }
 
-Game.lostMenu = (scene: Scene) => new LostGameMenu(scene);
+Game.lostMenu = (scene: Game) => new LostGameMenu(scene);
