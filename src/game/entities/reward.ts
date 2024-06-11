@@ -1,12 +1,12 @@
 import { MOUSE, MouseEventData, MouseEventType } from '$/input/mouse';
 import Renderer, { PIVOTS } from '$/rendering/Renderer';
-import { Scene } from '$/scene/Scene';
 import { SpriteSheet } from '$/sprites/spritesheet';
 import Entity from 'src/entities/Entity';
 import { lerp } from 'src/utils/interpolation';
 import SPRITESHEETS_REGISTRY from '../registries/SpriteSheets';
 import { notNullOrUndefined } from 'src/utils/Objects';
 import { PlantReward, RewardData } from '../registries/Levels';
+import { Game } from '../scenes/Game';
 
 export class Reward implements Entity {
     readonly rewardFrame: SpriteSheet = notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:reward'));
@@ -17,7 +17,7 @@ export class Reward implements Entity {
 
     boundingBox: [number, number, number, number];
     
-    readonly scene: Scene;
+    readonly scene: Game;
 
     readonly animationDuration = 2000;
 
@@ -34,7 +34,7 @@ export class Reward implements Entity {
     rewardData: RewardData;
 
 
-    constructor(scene: Scene, position: [number, number], rewardData: RewardData) {
+    constructor(scene: Game, position: [number, number], rewardData: RewardData) {
         this.position = position;
         this.rewardData = rewardData;
         if (rewardData.type == 'plant') {
@@ -76,6 +76,7 @@ export class Reward implements Entity {
                 36,
                 36,
             ];
+            this.scene.pvz.nextLevel();
             return;
         }
         this.position[0] = lerp(this.startPos![0], this.endPos![0], this.animationElapsed / this.animationDuration);
