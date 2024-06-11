@@ -8,8 +8,20 @@ import { LaneType } from '../registries/Levels.ts';
 import { SpriteSheet } from '$/sprites/spritesheet.ts';
 import { notNullOrUndefined } from 'src/utils/Objects.ts';
 import SPRITESHEETS_REGISTRY from '../registries/SpriteSheets.ts';
+import { MappedEventTarget } from '$/core/event_target.ts';
 
-export class GameBoard implements Entity {
+export interface PlantPlacementData {
+    cellX: number;
+    cellY: number;
+    plant: PlantEntry;
+}
+
+export type GameBoardEventMap  = {
+    'plantplaced': CustomEvent<PlantPlacementData>;
+};
+
+
+export class GameBoard extends MappedEventTarget<GameBoardEventMap> implements Entity {
     readonly zIndex: number = 0;
 
     readonly position: [number, number];
@@ -37,6 +49,7 @@ export class GameBoard implements Entity {
     }
 
     constructor(scene: Scene, laneTypes: LaneType[]) {
+        super();
         this.cell_size = [32, 32];
         this.board_size = [12, laneTypes.length];
         this.laneTypes = laneTypes;
@@ -73,6 +86,17 @@ export class GameBoard implements Entity {
         
         const plant = this.placePlant(cell, card.factory);
         arr.push(plant);
+        
+        const eventData : PlantPlacementData = {
+            cellX: cell[0],
+            cellY: cell[1],
+            plant: card,
+        };
+
+        this.dispatchEvent(new CustomEvent<PlantPlacementData>('plantplaced', {
+            detail: eventData,
+        }));
+
         return true;
     }
 
@@ -146,4 +170,5 @@ export class GameBoard implements Entity {
     dispose(): void {
 
     }
+
 }
