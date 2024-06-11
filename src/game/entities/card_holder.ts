@@ -1,12 +1,17 @@
-import Renderer, { PIVOTS } from '$/rendering/Renderer';
+import Renderer, { Alignment, Baseline, PIVOTS } from '$/rendering/Renderer';
 import Entity from 'src/entities/Entity';
 import { PlantEntry } from '../registries/Plants';
 import { GameBoard } from './board.ts';
-import { Scene } from '$/scene/Scene.ts';
 import { MOUSE_MOVE, MouseMoveEventData } from '$/input/mouse_movement.ts';
 import { point2Rect } from '$/core/collision.ts';
 import { MOUSE, MouseButton, MouseEventData, MouseEventType } from '$/input/mouse.ts';
 import { Game } from '../scenes/Game.ts';
+import { PromiseWaiter } from 'src/utils/Objects.ts';
+import { loadImage } from '$/resource_management/ResourceManager.ts';
+
+interface CardData {
+    cooldown: number;
+}
 
 export class CardHolder implements Entity {
     readonly zIndex: number = 0;
@@ -21,16 +26,23 @@ export class CardHolder implements Entity {
 
     readonly board: GameBoard;
 
-    readonly scene: Scene;
+    readonly scene: Game;
 
     selectedCardIndex: number = -1;
 
-    constructor(scene: Scene, board: GameBoard, cards: PlantEntry[]) {
+    readonly card_image = new PromiseWaiter(loadImage('./assets/img/gui/seed_card.png'));
+
+    readonly cardsData : CardData[];
+
+    constructor(scene: Game, board: GameBoard, cards: PlantEntry[]) {
         this.board = board;
         this.scene = scene;
         this.scene.dodo.listener_manager.addEventListener(MOUSE_MOVE, this.mouseMove);
         this.scene.dodo.listener_manager.addEventListener(MOUSE, this.mouseDown);
         this.cards = cards;
+        this.cardsData = this.cards.map(_ => ({
+            cooldown: 0,
+        }));
     }
 
     dispose(): void {
@@ -44,6 +56,7 @@ export class CardHolder implements Entity {
             if (this.selectedCardIndex < 0 || !point2Rect(event.position, this.board.boundingBox)) return;
             if (this.board.takeAction(event, this.cards[this.selectedCardIndex])) {
                 (this.scene as Game).currentSun -= this.cards[this.selectedCardIndex].cost;
+                this.cardsData[this.selectedCardIndex].cooldown = this.cards[this.selectedCardIndex].cooldown;
             }
             this.selectedCardIndex = -1;
         }
@@ -59,7 +72,7 @@ export class CardHolder implements Entity {
         if ((relativePos[0] % widthWithPadding[0]) >= this.cardSize[0] || (relativePos[1] % widthWithPadding[1]) >= this.cardSize[1]) return;
         const card = Math.floor(relativePos[0] / widthWithPadding[0]);
         if (card < 0 || card - 1 > this.cards.length) return;
-        if (this.cards[card].cost > (this.scene as Game).currentSun) return;
+        if (this.cards[card].cost > (this.scene as Game).currentSun || this.cardsData[card].cooldown > 0) return;
         this.selectedCardIndex = card;
     };
 
@@ -72,21 +85,27 @@ export class CardHolder implements Entity {
 
     tick(delta: number): void {
         this.cards.forEach(e => e.idleAnimation.animate(delta));
+        this.cardsData.forEach(e => e.cooldown > 0 && (e.cooldown -= delta));
     }
 
     draw(renderer: Renderer): void {
-        renderer.context.renderRect('#fff', ...this.boundingBox);
-        this.cards.forEach((e, i) => {
-            renderer.context.renderRect(i == this.selectedCardIndex ? '#0f0' : '#f00', this.boundingBox[0] + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1], ...this.cardSize);
-            renderer.context.renderRect(i == this.selectedCardIndex ? '#0d0' : '#d00', this.boundingBox[0] + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1], this.cardSize[0], this.cardSize[0]);
-            e.idleAnimation.render(renderer, PIVOTS.MID_CENTER, this.boundingBox[0] + this.cardSize[0] / 2 + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1] + this.cardSize[0] / 2);
+        const cardImage = this.card_image.get();
 
-            renderer.context.textAlign = 'center';
-            renderer.context.textBaseline = 'bottom';
+        this.cards.forEach((e, i) => {
+            const cardPos: [number, number] = [this.boundingBox[0] + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1]];
+            //renderer.context.renderRect(i == this.selectedCardIndex ? '#0f0' : '#f00', this.boundingBox[0] + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1], ...this.cardSize);
+            //renderer.context.renderRect(i == this.selectedCardIndex ? '#0d0' : '#d00', this.boundingBox[0] + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1], this.cardSize[0], this.cardSize[0]);
+            if (cardImage) {
+                renderer.context.drawImage(cardImage, ...cardPos);
+            }
+            e.idleAnimation.render(renderer, PIVOTS.TOP_LEFT, this.boundingBox[0] + 8 + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1] + 11);
+
+            renderer.context.setFont('pixel', 16);
             renderer.context.fillStyle = '#000';
-            renderer.context.font = '16px pixel';
-            renderer.context.textRendering = 'geometricPrecision';
-            renderer.context.fillText(e.cost.toFixed(), this.boundingBox[0] + (this.cardSize[0] + 1) / 2 + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1] + this.cardSize[1]);
+            renderer.context.renderText(Math.floor(this.boundingBox[0] + (this.cardSize[0] + 1) / 2 + (this.cardSize[0] + this.cardPadding) * i), Math.floor(this.boundingBox[1] + this.cardSize[1]) - 4, e.cost.toFixed(), Baseline.Alphabetic, Alignment.Center);
+            if (this.cards[i].cost > this.scene.currentSun)
+                renderer.context.renderRect('#0008', ...cardPos, ...this.cardSize);
+            renderer.context.renderRect('#0004', ...cardPos, this.cardSize[0], this.cardSize[1] * this.cardsData[i].cooldown / this.cards[i].cooldown);
         });
     }
 }

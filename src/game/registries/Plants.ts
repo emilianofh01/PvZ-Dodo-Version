@@ -20,6 +20,7 @@ export interface PlantEntry {
     description: string
     idleAnimation: SpriteSheetAnimation
     cost: number
+    cooldown: number
     canPlant?: (pos: [number, number], board: GameBoard) => boolean
     factory: (props: PlantFactoryProps, scene: Scene) => BoardPieceEntity<any>
 }
@@ -36,6 +37,7 @@ PLANTS_REGISTRY.add('dodo:sunflower', {
     name: 'Sunflower',
     description: "Sunflower can't resist bouncing to the beat. Which beat is that? Why, the life-giving jazzy rhythm of the Earth itself, thumping at a frequency only Sunflower can hear.",
     cost: 50,
+    cooldown: 8000,
     canPlant: AND(REQUIRE_EMPTY, (pos, board) => board.laneTypes[pos[1]] === LaneType.Grass),
     idleAnimation: new SpriteSheetAnimation(
         notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:sunflower_idle')),
@@ -58,6 +60,7 @@ PLANTS_REGISTRY.add('dodo:peashooter', {
     name: 'Peashooter',
     description: 'Peashooters are your first line of defense. They shoot peas at attacking zombies.',
     cost: 100,
+    cooldown: 8000,
     canPlant: AND(REQUIRE_EMPTY, (pos, board) => board.laneTypes[pos[1]] === LaneType.Grass),
     idleAnimation: new SpriteSheetAnimation(
         notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:peashooter_idle')),

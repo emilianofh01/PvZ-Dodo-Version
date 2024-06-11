@@ -11,3 +11,19 @@ export function notNullOrUndefined <T>(obj: T | null | undefined, error?: string
 export function map<T, R>(obj: T, fn: (obj: T) => R): R {
     return fn(obj);
 }
+
+
+export class PromiseWaiter<T> {
+    promise: Promise<T>;
+
+    element_loaded: T | null = null;
+
+    constructor(promise: Promise<T>) {
+        this.promise = promise;
+        this.promise.then(e => this.element_loaded = e);
+    }
+
+    get() {
+        return this.element_loaded;
+    }
+}
