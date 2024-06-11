@@ -30,6 +30,21 @@ SPRITESHEETS_REGISTRY.add(
 );
 
 SPRITESHEETS_REGISTRY.add(
+    'dodo:wall_nut',
+    SpriteSheet.singleGroup(loadImage('./assets/img/entities/plants/wall_nut.png'), { grid_size: [5, 5], frames: 22 }),
+);
+
+SPRITESHEETS_REGISTRY.add(
+    'dodo:wall_nut_damaged',
+    SpriteSheet.singleGroup(loadImage('./assets/img/entities/plants/wall_nut_damaged.png'), { grid_size: [4, 5], frames: 19 }),
+);
+
+SPRITESHEETS_REGISTRY.add(
+    'dodo:wall_nut_heavily_damaged',
+    SpriteSheet.singleGroup(loadImage('./assets/img/entities/plants/wall_nut_heavily_damaged.png'), { grid_size: [4, 5], frames: 19 }),
+);
+
+SPRITESHEETS_REGISTRY.add(
     'dodo:pea',
     SpriteSheet.singleGroup(loadImage('./assets/img/entities/projectiles/pea.png'), { grid_size: [1, 1], frames: 1 }),
 );
