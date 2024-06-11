@@ -38,4 +38,10 @@ SPRITESHEETS_REGISTRY.add(
     'dodo:grass',
     SpriteSheet.singleGroup(loadImage('./assets/img/grass.png'), { grid_size: [2, 2], frames: 3 }),
 );
+
+SPRITESHEETS_REGISTRY.add(
+    'dodo:reward',
+    SpriteSheet.singleGroup(loadImage('./assets/img/reward.png'), { cell_size: [36, 36], grid_size: [2, 2], frames: 3 }),
+);
+
 export default SPRITESHEETS_REGISTRY;
