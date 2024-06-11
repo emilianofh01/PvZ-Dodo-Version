@@ -36,6 +36,6 @@ SPRITESHEETS_REGISTRY.add(
 
 SPRITESHEETS_REGISTRY.add(
     'dodo:grass',
-    SpriteSheet.singleGroup(loadImage('./assets/img/grass.png'), { grid_size: [2, 1], frames: 2 }),
+    SpriteSheet.singleGroup(loadImage('./assets/img/grass.png'), { grid_size: [2, 2], frames: 3 }),
 );
 export default SPRITESHEETS_REGISTRY;
