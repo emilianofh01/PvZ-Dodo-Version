@@ -6,6 +6,8 @@ import { notNullOrUndefined } from 'src/utils/Objects';
 import { AbstractPlantEntity, PlantProperties } from './PlantEntity';
 import { Scene } from '$/scene/Scene';
 import { BasicProjectile } from './projectiles/BasicProjectile';
+import { Game } from 'src/game/scenes/Game';
+import { AbstractZombie } from '../zombie/AbstractZombie';
 
 interface PeaShooterProps {
     position: [number, number]
@@ -30,6 +32,10 @@ export class PeaShooter extends AbstractPlantEntity<PlantProperties> {
 
     readonly shootingPointOffset: [number, number];
 
+    readonly raycastStart : number;
+
+    readonly raycastEnd : number;
+
     constructor(props: PeaShooterProps, scene: Scene) {
         super({
             cooldown: 1500,
@@ -40,6 +46,8 @@ export class PeaShooter extends AbstractPlantEntity<PlantProperties> {
             12,
         ];
         this.boundingBox = [...props.position, 32, 32];
+        this.raycastStart = props.position[0] + this.shootingPointOffset[0];
+        this.raycastEnd = (scene as Game).spawner.start_x;
     }
 
     animationSent = false;
@@ -48,14 +56,33 @@ export class PeaShooter extends AbstractPlantEntity<PlantProperties> {
         super.tick(delta);
         this.animationController.update(delta);
         if (this.cooldownElapsed <= this.shootingAnim.duration() * .5 && !this.animationSent) {
-            this.animationController.addToQueue(this.shootingAnim);
-            this.animationController.addToQueue(this.idleAnim);
-            this.animationController.skip();
-            this.animationSent = true;
+            if (this.checkZombies()) {
+                this.animationController.addToQueue(this.shootingAnim);
+                this.animationController.addToQueue(this.idleAnim);
+                this.animationController.skip();
+                this.animationSent = true;
+            }
         }
     }
 
+    checkZombies(): boolean {
+        if (this.board == undefined || this.boardPosition == undefined) throw Error('Board or boardPosition not defined');
+        const entities = this.board.laneEntities.get(this.boardPosition[1]);
+        if (!entities) return false;
+        for (const entity of entities) {
+            if (entity instanceof AbstractZombie) {
+                const box = entity.collisionBox;
+                if (box[0] + box[2] > this.raycastStart && box[0] < this.raycastEnd) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     fixedTick(): boolean {
+        if (this.board == undefined || this.boardPosition == undefined) throw Error('Board or boardPosition not defined');
+        if (!this.checkZombies()) return false;
         this.animationSent = false;
         if (this.board != undefined && this.boardPosition != undefined) {
             const board = this.board;
@@ -74,6 +101,7 @@ export class PeaShooter extends AbstractPlantEntity<PlantProperties> {
                 },
             ));
         }
+
         return true;
     }
 
