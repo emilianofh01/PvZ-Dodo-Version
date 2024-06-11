@@ -8,9 +8,11 @@ import { MOUSE, MouseButton, MouseEventData, MouseEventType } from '$/input/mous
 import { Game } from '../scenes/Game.ts';
 import { PromiseWaiter } from 'src/utils/Objects.ts';
 import { loadImage } from '$/resource_management/ResourceManager.ts';
+import { SpriteSheetAnimation } from '$/sprites/animatable.ts';
 
 interface CardData {
     cooldown: number;
+    animation: SpriteSheetAnimation;
 }
 
 export class CardHolder implements Entity {
@@ -40,8 +42,9 @@ export class CardHolder implements Entity {
         this.scene.dodo.listener_manager.addEventListener(MOUSE_MOVE, this.mouseMove);
         this.scene.dodo.listener_manager.addEventListener(MOUSE, this.mouseDown);
         this.cards = cards;
-        this.cardsData = this.cards.map(_ => ({
+        this.cardsData = this.cards.map(card => ({
             cooldown: 0,
+            animation: new SpriteSheetAnimation(card.idleAnimation.sheet, card.idleAnimation.group, card.idleAnimation.fps),
         }));
     }
 
@@ -84,7 +87,7 @@ export class CardHolder implements Entity {
     };
 
     tick(delta: number): void {
-        this.cards.forEach(e => e.idleAnimation.animate(delta));
+        this.cardsData.forEach(e => e.animation.animate(delta));
         this.cardsData.forEach(e => e.cooldown > 0 && (e.cooldown -= delta));
     }
 
@@ -98,14 +101,14 @@ export class CardHolder implements Entity {
             if (cardImage) {
                 renderer.context.drawImage(cardImage, ...cardPos);
             }
-            e.idleAnimation.render(renderer, PIVOTS.TOP_LEFT, this.boundingBox[0] + 8 + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1] + 11);
+            this.cardsData[i].animation.render(renderer, PIVOTS.TOP_LEFT, this.boundingBox[0] + 8 + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1] + 11);
 
             renderer.context.setFont('pixel', 16);
             renderer.context.fillStyle = '#000';
             renderer.context.renderText(Math.floor(this.boundingBox[0] + (this.cardSize[0] + 1) / 2 + (this.cardSize[0] + this.cardPadding) * i), Math.floor(this.boundingBox[1] + this.cardSize[1]) - 4, e.cost.toFixed(), Baseline.Alphabetic, Alignment.Center);
             if (this.cards[i].cost > this.scene.currentSun)
                 renderer.context.renderRect('#0008', ...cardPos, ...this.cardSize);
-            renderer.context.renderRect('#0004', ...cardPos, this.cardSize[0], this.cardSize[1] * this.cardsData[i].cooldown / this.cards[i].cooldown);
+            renderer.context.renderRect('#0004', ...cardPos, this.cardSize[0], Math.max(0, this.cardSize[1] * this.cardsData[i].cooldown / this.cards[i].cooldown));
         });
     }
 }

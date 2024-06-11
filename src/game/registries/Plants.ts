@@ -1,6 +1,5 @@
 import { Registry } from '$/core/registry';
 import { Scene } from '$/scene/Scene';
-import { SpriteSheetAnimation } from '$/sprites/animatable';
 import { SunEntity } from 'src/entities/SunEntity';
 import { Sunflower } from 'src/entities/plant/Sunflower';
 import { GameBoard } from '../entities/board.ts';
@@ -10,15 +9,22 @@ import { notNullOrUndefined } from 'src/utils/Objects.ts';
 import { BoardPieceEntity } from 'src/entities/BoardPieceEntity.ts';
 import { PeaShooter } from 'src/entities/plant/PeaShooter.ts';
 import { LaneType } from './Levels.ts';
+import { SpriteSheet } from '$/sprites/spritesheet.ts';
 
 export interface PlantFactoryProps {
     position: [number, number]
 }
 
+export interface SpriteSheetAnimationData {
+    sheet: SpriteSheet
+    group: string
+    fps: number
+}
+
 export interface PlantEntry {
     name: string
     description: string
-    idleAnimation: SpriteSheetAnimation
+    idleAnimation: SpriteSheetAnimationData
     cost: number
     cooldown: number
     canPlant?: (pos: [number, number], board: GameBoard) => boolean
@@ -39,11 +45,11 @@ PLANTS_REGISTRY.add('dodo:sunflower', {
     cost: 50,
     cooldown: 8000,
     canPlant: AND(REQUIRE_EMPTY, (pos, board) => board.laneTypes[pos[1]] === LaneType.Grass),
-    idleAnimation: new SpriteSheetAnimation(
-        notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:sunflower_idle')),
-        'default',
-        6,
-    ),
+    idleAnimation: {
+        sheet: notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:sunflower_idle')),
+        group: 'default',
+        fps: 6,
+    },
     factory(props: PlantFactoryProps, scene: Scene) {
         return new Sunflower(
             {
@@ -62,11 +68,11 @@ PLANTS_REGISTRY.add('dodo:peashooter', {
     cost: 100,
     cooldown: 8000,
     canPlant: AND(REQUIRE_EMPTY, (pos, board) => board.laneTypes[pos[1]] === LaneType.Grass),
-    idleAnimation: new SpriteSheetAnimation(
-        notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:peashooter_idle')),
-        'default',
-        10,
-    ),
+    idleAnimation: {
+        sheet: notNullOrUndefined(SPRITESHEETS_REGISTRY.get('dodo:peashooter_idle')),
+        group: 'default',
+        fps: 10,
+    },
     factory(props: PlantFactoryProps, scene: Scene) {
         return new PeaShooter(
             {
