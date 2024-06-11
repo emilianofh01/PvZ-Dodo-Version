@@ -43,25 +43,25 @@ LEVELS_REGISTRY.add('dodo:level_1-1', {
     ],
     waves: [
         {
+            time: 0,
+            batch: [
+                { selectLane: () => 2, zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
+            ],
+        },
+        {
             time: 30000,
             batch: [
                 { selectLane: () => 2, zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
             ],
         },
         {
-            time: 40000,
+            time: 60000,
             batch: [
                 { selectLane: () => 2, zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
             ],
         },
         {
-            time: 50000,
-            batch: [
-                { selectLane: () => 2, zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
-            ],
-        },
-        {
-            time: 65000,
+            time: 90000,
             batch: [
                 { selectLane: () => 2, zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
                 { selectLane: () => 2, zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
