@@ -54,7 +54,7 @@ interface DefaultFontStyles {
     OBLIQUE: FontStyle
 }
 
-const FONT_STYLES : DefaultFontStyles = {
+export const FONT_STYLES : DefaultFontStyles = {
     NORMAL: { type: 'normal' },
     ITALIC: { type: 'italic' },
     OBLIQUE: { type: 'oblique' },
@@ -72,7 +72,7 @@ interface DefaultFontWeights {
     LIGHTER: FontWeight
 }
 
-const FONT_WEIGHTS : DefaultFontWeights = {
+export const FONT_WEIGHTS : DefaultFontWeights = {
     NORMAL: { weight: 'normal' },
     BOLD: { weight: 'bold' },
     BOLDER: { weight: 'bolder' },
