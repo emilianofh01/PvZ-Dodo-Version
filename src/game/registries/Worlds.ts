@@ -10,6 +10,7 @@ export interface World {
 }
 
 const WORLDS_REGISTRY = new Registry<World>();
+export default WORLDS_REGISTRY;
 
 WORLDS_REGISTRY.add('dodo:day', {
     name: 'Day',
