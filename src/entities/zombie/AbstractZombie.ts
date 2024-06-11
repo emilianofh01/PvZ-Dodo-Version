@@ -1,7 +1,6 @@
 import Renderer from '$/rendering/Renderer';
 import { GameBoard } from 'src/game/entities/board';
 import { LivingEntity, LivingEntityProps } from '../LivingEntity';
-import { Scene } from '$/scene/Scene';
 import { Game } from 'src/game/scenes/Game';
 
 interface Box {
@@ -39,9 +38,9 @@ export abstract class AbstractZombie<T extends ZombieProps = ZombieProps> extend
     
     protected lane: number;
 
-    protected scene: Scene;
+    protected scene: Game;
 
-    constructor(scene: Scene, board: GameBoard, props: T, startPos: [ number, number ], lane: number) {
+    constructor(scene: Game, board: GameBoard, props: T, startPos: [ number, number ], lane: number) {
         super(props);
         this.scene = scene;
         this.board = board;
@@ -52,13 +51,13 @@ export abstract class AbstractZombie<T extends ZombieProps = ZombieProps> extend
     }
 
     tick(delta: number) {
-        if (this.scene instanceof Game && !this.scene.gameRunning) {
+        if (!this.scene.gameRunning) {
             return;
         }
         if (this.targetedEntity?.dead) {
             this.targetedEntity = null;
         }
-        if (this.hasEnteredTheHouse() && this.scene instanceof Game) {
+        if (this.hasEnteredTheHouse()) {
             this.scene.gameLost();
         }
         if (this.targetedEntity == null) {
@@ -88,6 +87,22 @@ export abstract class AbstractZombie<T extends ZombieProps = ZombieProps> extend
     move(delta: number) {
         this.floatPos[0] -= this.props.speed * delta / 1000;
         this.position[0] = Math.ceil(this.floatPos[0]);
+    }
+
+    protected onDeath(_damager: LivingEntity<any>, _damageType: string, _amount: number) {
+        console.log(this.scene.spawner.doneSpawning);
+        if (this.scene.spawner.doneSpawning) {
+            let hasMore = false;
+            for (const entities of this.board.laneEntities.values()) {
+                if (entities.find(e => e instanceof AbstractZombie && e != this)) {
+                    hasMore = true; 
+                    break;
+                }
+            }
+            if (!hasMore) {
+                this.scene.hasWon(this);
+            }
+        }
     }
 
     dispose(): void {

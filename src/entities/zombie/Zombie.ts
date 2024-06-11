@@ -70,7 +70,8 @@ export class Zombie extends AbstractZombie {
         this.walkingAnim.render(renderer, PIVOTS.BOT_CENTER, ...this.position, ...this.props.size);
     }
 
-    protected onDeath(_damager: LivingEntity<any>, _damageType: string, _amount: number): void {
+    protected onDeath(damager: LivingEntity<any>, damageType: string, amount: number): void {
+        super.onDeath(damager, damageType, amount);
         this.scene.removeEntity(this);
     }
     

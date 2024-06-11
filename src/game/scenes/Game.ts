@@ -6,7 +6,7 @@ import { CardHolder } from '../entities/card_holder.ts';
 import { ENVIRONMENTS_REGISTRY, EnvironmentEntry } from '../registries/Environment.ts';
 import { notNullOrUndefined } from 'src/utils/Objects.ts';
 import { Spawner } from '../entities/spawner.ts';
-import { LEVELS_REGISTRY } from '../registries/Levels.ts';
+import { LEVELS_REGISTRY, Level } from '../registries/Levels.ts';
 import { BasicGUIMenu } from '$/gui/elements.ts';
 import { Button } from '$/gui/components/buttons.ts';
 import { TintedSpriteSheet } from '$/sprites/spritesheet.ts';
@@ -14,6 +14,8 @@ import { loadImage } from '$/resource_management/ResourceManager.ts';
 import Renderer, { Alignment, Baseline } from '$/rendering/Renderer.ts';
 import MainScene from './MainScene.ts';
 import PLANTS_REGISTRY from '../registries/Plants.ts';
+import { Reward } from '../entities/reward.ts';
+import { AbstractZombie } from 'src/entities/zombie/AbstractZombie.ts';
 
 
 export class Game extends Scene {
@@ -21,20 +23,24 @@ export class Game extends Scene {
 
     environment: EnvironmentEntry = notNullOrUndefined(ENVIRONMENTS_REGISTRY.get('dodo:sunny'));
 
-    gameBoard: GameBoard;
+    readonly gameBoard: GameBoard;
 
     gameRunning: boolean;
 
+    readonly spawner: Spawner;
+
     static lostMenu: (scene: Scene) => BasicGUIMenu;
+
+    readonly level: Level;
 
     constructor(dodo: Dodo) {
         super(dodo);
         this.addEntity(_ => new SunCounter(this.getSun));
-        const level = notNullOrUndefined(LEVELS_REGISTRY.get('dodo:level_1-1'));
+        const level = this.level = notNullOrUndefined(LEVELS_REGISTRY.get('dodo:level_1-1'));
         const board = this.gameBoard = this.addEntity(s => new GameBoard(s, level.lanes));
         this.addEntity(scene => this.environment.factory(scene as Game));
         this.addEntity(scene => new CardHolder(scene as Game, board, level.fixedSeeds ?? [ ...PLANTS_REGISTRY.getAll() ]));
-        const spawner = this.addEntity(scene => new Spawner(scene, board, 384));
+        const spawner = this.spawner = this.addEntity(scene => new Spawner(scene, board, 384));
         spawner.loadLevel(level);
         this.currentSun = level.startingSuns;
         this.gameRunning = true;
@@ -44,6 +50,15 @@ export class Game extends Scene {
         if (!this.gameRunning) return;
         this.gameRunning = false;
         this.dodo.guiController.setMenu(Game.lostMenu(this));
+    }
+
+    hasWon(lastZombieAlive: AbstractZombie) {
+        if (this.level.reward) {
+            this.addEntity(scene => new Reward(scene, [
+                lastZombieAlive.boundingBox[0] + lastZombieAlive.boundingBox[2] / 2,
+                lastZombieAlive.boundingBox[1] + lastZombieAlive.boundingBox[3],
+            ], this.level.reward!));
+        }
     }
 
     getSun = () => this.currentSun;
