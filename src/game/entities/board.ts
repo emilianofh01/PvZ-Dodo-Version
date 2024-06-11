@@ -127,7 +127,7 @@ export class GameBoard implements Entity {
                 const variant = (i + j) % 2;                
                 this.spriteSheet.drawImage(renderer.context, 'default', variant, this.position[0] + this.cell_size[0] * i, this.position[1] + this.cell_size[1] * j);
                 if (this.laneTypes[j] == LaneType.Ground) {
-                    renderer.context.renderRect('#865439', this.position[0] + this.cell_size[0] * i, this.position[1] + this.cell_size[1] * j, ...this.cell_size);
+                    this.spriteSheet.drawImage(renderer.context, 'default', 2, this.position[0] + this.cell_size[0] * i, this.position[1] + this.cell_size[1] * j);
                 }
                 if ((this.highlightedCell == null) || this.highlightedCell[0] != i || this.highlightedCell[1] != j) continue;
                 if (this.selectedPlant && (!this.selectedPlant.canPlant || this.selectedPlant.canPlant(this.highlightedCell, this)))
