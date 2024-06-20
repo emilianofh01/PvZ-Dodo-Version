@@ -172,6 +172,10 @@ LEVELS_REGISTRY.add('dodo:level_1-2', {
         notNullOrUndefined(PLANTS_REGISTRY.get('dodo:peashooter')),
         notNullOrUndefined(PLANTS_REGISTRY.get('dodo:sunflower')),
     ],
+    reward: {
+        type: 'plant',
+        reward: notNullOrUndefined(PLANTS_REGISTRY.get('dodo:wall_nut')),
+    },
     startLevelConditions: [
         new DelayAfterCondition(new PlacePlantCondition(notNullOrUndefined(PLANTS_REGISTRY.get('dodo:sunflower')), 3), 16000),
     ],
@@ -248,44 +252,44 @@ LEVELS_REGISTRY.add('dodo:level_1-3', {
     ],
     waves: [
         {
-            time: 0,
+            time: 40000 + 0,
             batch: [
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
             ],
         },
         {
-            time: 30000,
+            time: 40000 + 30000,
             batch: [
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
             ],
         },
         {
-            time: 60000,
+            time: 40000 + 60000,
             batch: [
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
             ],
         },
         {
-            time: 90000,
+            time: 40000 + 90000,
             batch: [
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:cone_zombie')) },
             ],
         },
         {
-            time: 120000,
+            time: 40000 + 120000,
             batch: [
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:cone_zombie')) },
             ],
         },
         {
-            time: 150000,
+            time: 40000 + 150000,
             batch: [
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
             ],
         },
         {
-            time: 180000,
+            time: 40000 + 180000,
             batch: [
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:cone_zombie')) },
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
@@ -293,7 +297,7 @@ LEVELS_REGISTRY.add('dodo:level_1-3', {
         },
         
         {
-            time: 210000,
+            time: 40000 + 210000,
             batch: [
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
                 { selectLane: () => randomInt(1, 4), zombie: notNullOrUndefined(ZOMBIES_REGISTRY.get('dodo:zombie')) },
@@ -311,7 +315,6 @@ LEVELS_REGISTRY.add('dodo:level_1-4', {
         notNullOrUndefined(PLANTS_REGISTRY.get('dodo:peashooter')),
         notNullOrUndefined(PLANTS_REGISTRY.get('dodo:sunflower')),
         notNullOrUndefined(PLANTS_REGISTRY.get('dodo:wall_nut')),
-        notNullOrUndefined(PLANTS_REGISTRY.get('dodo:cherry_bomb')),
     ],
     startLevelConditions: [
     ],

@@ -18,5 +18,6 @@ WORLDS_REGISTRY.add('dodo:day', {
     levels: [
         notNullOrUndefined(LEVELS_REGISTRY.get('dodo:level_1-1')),
         notNullOrUndefined(LEVELS_REGISTRY.get('dodo:level_1-2')),
+        notNullOrUndefined(LEVELS_REGISTRY.get('dodo:level_1-3')),
     ],
 });
