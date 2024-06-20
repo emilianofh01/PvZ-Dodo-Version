@@ -1,12 +1,13 @@
 import Renderer, { PIVOTS } from '$/rendering/Renderer';
 import { GameBoard } from 'src/game/entities/board';
-import { AbstractZombie } from './AbstractZombie';
+import { AbstractZombie, ZombieProps } from './AbstractZombie';
 import { SpriteSheetAnimation } from '$/sprites/animatable';
 import { notNullOrUndefined } from 'src/utils/Objects';
 import SPRITESHEETS_REGISTRY from 'src/game/registries/SpriteSheets';
 import { AbstractPlantEntity } from '../plant/PlantEntity';
 import { LivingEntity } from '../LivingEntity';
 import { Scene } from '$/scene/Scene';
+import { Game } from 'src/game/scenes/Game';
 
 export class Zombie extends AbstractZombie {
 
@@ -37,14 +38,14 @@ export class Zombie extends AbstractZombie {
         return [this.props.detectionPoint[0] + this.position[0], this.props.detectionPoint[1] + this.position[1]];
     }
 
-    constructor(scene: Scene, board: GameBoard, startPos: [number, number], lane: number) {
+    constructor(scene: Scene, board: GameBoard, startPos: [number, number], lane: number, props?: ZombieProps) {
         super(
-            scene,
+            scene as Game,
             board, 
-            {
-                biteCooldown: 500,
-                damage: 20,
-                health: 200,
+            props ?? {
+                biteCooldown: 1000,
+                damage: 100,
+                health: 181,
                 size: [ 32, 32 ],
                 speed: 6,
                 collisionBox: {

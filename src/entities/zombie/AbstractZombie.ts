@@ -10,7 +10,7 @@ interface Box {
     height: number
 }
 
-interface ZombieProps extends LivingEntityProps {
+export interface ZombieProps extends LivingEntityProps {
     speed: number
     damage: number
     biteCooldown: number
