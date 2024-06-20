@@ -6,7 +6,7 @@ import { CardHolder } from '../entities/card_holder.ts';
 import { ENVIRONMENTS_REGISTRY, EnvironmentEntry } from '../registries/Environment.ts';
 import { notNullOrUndefined } from 'src/utils/Objects.ts';
 import { Spawner } from '../entities/spawner.ts';
-import { LEVELS_REGISTRY, Level } from '../registries/Levels.ts';
+import { Level } from '../registries/Levels.ts';
 import { BasicGUIMenu } from '$/gui/elements.ts';
 import { Button } from '$/gui/components/buttons.ts';
 import Renderer, { Alignment, BackdropFill, Baseline } from '$/rendering/Renderer.ts';

@@ -1,9 +1,7 @@
 import Dodo from '$/Dodo';
 import { Button } from '$/gui/components/buttons';
 import { BasicGUIMenu } from '$/gui/elements';
-import { loadImage } from '$/resource_management/ResourceManager';
 import { Scene } from '$/scene/Scene';
-import { TintedSpriteSheet } from '$/sprites/spritesheet';
 import { notNullOrUndefined } from 'src/utils/Objects';
 import { PlantsVsZombies } from '../game';
 import WORLDS_REGISTRY from '../registries/Worlds';
