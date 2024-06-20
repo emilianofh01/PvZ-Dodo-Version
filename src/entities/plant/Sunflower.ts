@@ -33,7 +33,7 @@ export class Sunflower extends SunHarvestingPlant {
             cooldown: 20000,
             sunAmount: 25,
             sunSpawningPoint: [0.65, 0.65],
-            health: 100,
+            health: 300,
         }, scene);
         this.boundingBox = [...sunflowerProps.position, 32, 32];
     }

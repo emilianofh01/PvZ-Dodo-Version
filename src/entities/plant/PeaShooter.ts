@@ -39,7 +39,7 @@ export class PeaShooter extends AbstractPlantEntity<PlantProperties> {
     constructor(props: PeaShooterProps, scene: Scene) {
         super({
             cooldown: 1500,
-            health: 100,
+            health: 300,
         }, scene);
         this.shootingPointOffset = [
             18,
