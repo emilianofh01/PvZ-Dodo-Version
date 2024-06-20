@@ -31,7 +31,7 @@ SPRITESHEETS_REGISTRY.add(
 
 SPRITESHEETS_REGISTRY.add(
     'dodo:cone_zombie_walking',
-    SpriteSheet.singleGroup(loadImage('./assets/img/entities/zombies/cone_zombie_walking.png'), { grid_size: [3, 3], frames: 8 }),
+    SpriteSheet.singleGroup(loadImage('./assets/img/entities/zombies/cone_zombie_walking.png'), { grid_size: [5, 5], frames: 24 }),
 );
 
 SPRITESHEETS_REGISTRY.add(
@@ -57,6 +57,16 @@ SPRITESHEETS_REGISTRY.add(
 SPRITESHEETS_REGISTRY.add(
     'dodo:grass',
     SpriteSheet.singleGroup(loadImage('./assets/img/grass.png'), { grid_size: [2, 2], frames: 3 }),
+);
+
+SPRITESHEETS_REGISTRY.add(
+    'dodo:fence',
+    SpriteSheet.singleGroup(loadImage('./assets/img/fence.png'), { grid_size: [3, 1], frames: 3 }),
+);
+
+SPRITESHEETS_REGISTRY.add(
+    'dodo:sunny_bg',
+    SpriteSheet.singleGroup(loadImage('./assets/img/bg_top_sunny.png'), { grid_size: [1, 1], frames: 1, cell_size: [384, 80] }),
 );
 
 SPRITESHEETS_REGISTRY.add(
