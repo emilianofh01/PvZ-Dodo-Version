@@ -33,6 +33,8 @@ export class CardHolder implements Entity {
     selectedCardIndex: number = -1;
 
     readonly card_image = new PromiseWaiter(loadImage('./assets/img/gui/seed_card.png'));
+    
+    readonly card_image_selected = new PromiseWaiter(loadImage('./assets/img/gui/seed_card_selected.png'));
 
     readonly cardsData : CardData[];
 
@@ -63,7 +65,11 @@ export class CardHolder implements Entity {
             }
             this.selectedCardIndex = -1;
         }
+        if (!point2Rect(event.position, this.board.boundingBox)) {
+            this.selectedCardIndex = -1;
+        }
         if (!point2Rect(event.position, this.boundingBox)) return;
+        this.selectedCardIndex = -1;
         const relativePos = [
             event.position[0] - this.boundingBox[0],
             event.position[1] - this.boundingBox[1],
@@ -74,7 +80,7 @@ export class CardHolder implements Entity {
         ];
         if ((relativePos[0] % widthWithPadding[0]) >= this.cardSize[0] || (relativePos[1] % widthWithPadding[1]) >= this.cardSize[1]) return;
         const card = Math.floor(relativePos[0] / widthWithPadding[0]);
-        if (card < 0 || card - 1 > this.cards.length) return;
+        if (card < 0 || card > this.cards.length - 1) return;
         if (this.cards[card].cost > (this.scene as Game).currentSun || this.cardsData[card].cooldown > 0) return;
         this.selectedCardIndex = card;
     };
@@ -93,12 +99,16 @@ export class CardHolder implements Entity {
 
     draw(renderer: Renderer): void {
         const cardImage = this.card_image.get();
+        const cardImageSelected = this.card_image_selected.get();
 
         this.cards.forEach((e, i) => {
             const cardPos: [number, number] = [this.boundingBox[0] + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1]];
             //renderer.context.renderRect(i == this.selectedCardIndex ? '#0f0' : '#f00', this.boundingBox[0] + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1], ...this.cardSize);
             //renderer.context.renderRect(i == this.selectedCardIndex ? '#0d0' : '#d00', this.boundingBox[0] + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1], this.cardSize[0], this.cardSize[0]);
-            if (cardImage) {
+            if (i == this.selectedCardIndex && cardImageSelected) {
+                renderer.context.drawImage(cardImageSelected, ...cardPos);
+            }
+            if (i != this.selectedCardIndex && cardImage) {
                 renderer.context.drawImage(cardImage, ...cardPos);
             }
             this.cardsData[i].animation.render(renderer, PIVOTS.TOP_LEFT, this.boundingBox[0] + 8 + (this.cardSize[0] + this.cardPadding) * i, this.boundingBox[1] + 11);
