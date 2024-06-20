@@ -9,9 +9,7 @@ import { Spawner } from '../entities/spawner.ts';
 import { LEVELS_REGISTRY, Level } from '../registries/Levels.ts';
 import { BasicGUIMenu } from '$/gui/elements.ts';
 import { Button } from '$/gui/components/buttons.ts';
-import { TintedSpriteSheet } from '$/sprites/spritesheet.ts';
-import { loadImage } from '$/resource_management/ResourceManager.ts';
-import Renderer, { Alignment, Baseline } from '$/rendering/Renderer.ts';
+import Renderer, { Alignment, BackdropFill, Baseline } from '$/rendering/Renderer.ts';
 import MainScene from './MainScene.ts';
 import PLANTS_REGISTRY from '../registries/Plants.ts';
 import { Reward } from '../entities/reward.ts';
@@ -20,6 +18,8 @@ import { PlantsVsZombies } from '../game.ts';
 
 
 export class Game extends Scene {
+    public fill: BackdropFill = '#99edff';
+    
     currentSun = 50;
 
     environment: EnvironmentEntry = notNullOrUndefined(ENVIRONMENTS_REGISTRY.get('dodo:sunny'));
@@ -58,7 +58,7 @@ export class Game extends Scene {
 
     hasWon(lastZombieAlive: AbstractZombie) {
         if (this.level.reward) {
-            this.addEntity(scene => new Reward(scene, [
+            this.addEntity(scene => new Reward(scene as Game, [
                 lastZombieAlive.boundingBox[0] + lastZombieAlive.boundingBox[2] / 2,
                 lastZombieAlive.boundingBox[1] + lastZombieAlive.boundingBox[3],
             ], this.level.reward!));
@@ -88,22 +88,6 @@ export class LostGameMenu extends BasicGUIMenu {
             {
                 position: [105, 106],
                 size: [174, 20],
-                buttonFace: new TintedSpriteSheet(
-                    loadImage('./button_sprite_sheet.png'),
-                    {
-                        groups: [
-                            {
-                                x: 0,
-                                y: 0,
-                                grid_size: [3, 3],
-                                cell_size: [8, 8],
-                                name: 'button',
-                                padding: [0, 0],
-                            },
-                        ],
-                        tint: [1, 1, 1],
-                    },
-                ),
                 onClick: () => {
                     scene.pvz.restartLevel();
                 },
@@ -115,22 +99,6 @@ export class LostGameMenu extends BasicGUIMenu {
             {
                 position: [105, 136],
                 size: [174, 20],
-                buttonFace: new TintedSpriteSheet(
-                    loadImage('./button_sprite_sheet.png'),
-                    {
-                        groups: [
-                            {
-                                x: 0,
-                                y: 0,
-                                grid_size: [3, 3],
-                                cell_size: [8, 8],
-                                name: 'button',
-                                padding: [0, 0],
-                            },
-                        ],
-                        tint: [1, 1, 1],
-                    },
-                ),
                 onClick: () => {
                     scene.dodo.transitionTo(() => new MainScene(scene.dodo, scene.pvz));
                 },

@@ -16,22 +16,6 @@ class MainMenu extends BasicGUIMenu {
             {
                 position: [105, 106],
                 size: [174, 20],
-                buttonFace: new TintedSpriteSheet(
-                    loadImage('./button_sprite_sheet.png'),
-                    {
-                        groups: [
-                            {
-                                x: 0,
-                                y: 0,
-                                grid_size: [3, 3],
-                                cell_size: [8, 8],
-                                name: 'button',
-                                padding: [0, 0],
-                            },
-                        ],
-                        tint: [1, 1, 1],
-                    },
-                ),
                 onClick: () => {
                     game.loadLevel(notNullOrUndefined(WORLDS_REGISTRY.get('dodo:day')), 0);
                 },
@@ -43,22 +27,6 @@ class MainMenu extends BasicGUIMenu {
             {
                 position: [105, 136],
                 size: [174, 20],
-                buttonFace: new TintedSpriteSheet(
-                    loadImage('./button_sprite_sheet.png'),
-                    {
-                        groups: [
-                            {
-                                x: 0,
-                                y: 0,
-                                grid_size: [3, 3],
-                                cell_size: [8, 8],
-                                name: 'button',
-                                padding: [0, 0],
-                            },
-                        ],
-                        tint: [1, 1, 1],
-                    },
-                ),
                 onClick: () => {
                     window.close();
                 },
