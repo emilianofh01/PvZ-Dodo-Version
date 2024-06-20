@@ -76,7 +76,7 @@ export class Button extends AbstractButton<ButtonConfig> {
         fontSize: 16,
         foreground: '#000',
         buttonFace: new SpriteSheet(
-            ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './button_sprite_sheet.png')),
+            ResourceManagement.instance.load(new AssetKey(ASSET_TYPES.IMAGE, './assets/img/gui/button_sprite_sheet.png')),
             {
                 groups: [
                     {
